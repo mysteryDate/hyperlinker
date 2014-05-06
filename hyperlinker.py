@@ -30,12 +30,13 @@ for b in businesses:
 	for link in a:
 		match = re.search("facebook", str(link['href']))
 		if match:
-			fbstr = str(link['href'])
+			fbstr = str((link['href']))
 			break
-	b['facebook'] = fbstr.partition('&')[0]
-	b['facebook'] = b['facebook'].partition('=')[2]
+	b['facebook'] = fbstr
+	# b['facebook'] = fbstr.partition('&')[0]
+	# b['facebook'] = b['facebook'].partition('=')[2]
 	print "Name: " + str(b['name'])
-	print "Phone: " + str(b['phone numbers'])
-	print "Facebook: " + str(b['facebook'])
+	print "Phone: " + unicode(b['phone numbers'])
+	print "Facebook: " + b['facebook']
 
 
