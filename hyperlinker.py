@@ -25,25 +25,6 @@ for line in fileData:
 	businesses.append({'name': unicode(line.rstrip(' \n'), 'utf-8')})
 	# pdb.set_trace()
 
-
-# for b in businesses:
-# 	print "Name: " + str(b['name'])
-# 	url = "https://www.google.ca/search?q=" + b['name'].replace(' ', '+').lower() + "+montreal"
-# 	soup = BeautifulSoup(opener.open(url).read())
-# 	# b['phone numbers'] = soup.find_all(text=re.compile("^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$"))
-# 	links = soup.find_all('cite')
-# 	a = soup.find_all('a')
-# 	fbstr = ''
-# 	for link in a:
-# 		match = re.search("facebook", str(link['href']))
-# 		if match:
-# 			fbstr = str((link['href']))
-# 			break
-# 	b['facebook'] = fbstr
-# 	b['facebook'] = fbstr.partition('&')[0]
-# 	b['facebook'] = b['facebook'].partition('=')[2]
-# 	print "Facebook: " + b['facebook']
-
 def removeSkipWords(words):
 	skipWords = ['au', 'le', 'de', 'the']
 	for w in words:
@@ -69,10 +50,8 @@ def findMatchScore(searchName, foundName) :
 	return bigR / len(inputWords)
 
 # search yelp
-for b in businesses:
-	print "Name: " + b['name']
-	name = unicodedata.normalize('NFKD', b['name']).encode('ascii','ignore')
-	# pdb.set_trace()
+def searchYelp(business):
+	name = unicodedata.normalize('NFKD', business['name']).encode('ascii','ignore')
 	url = "https://www.yelp.com/search?find_desc=" + name.replace(' ', '+').lower() + "&find_loc=Montreal"
 	soup = BeautifulSoup(opener.open(url).read())
 	a = soup.find('a', class_="biz-name")
@@ -84,23 +63,67 @@ for b in businesses:
 	if findMatchScore(name, foundName) > 0.75:
 		website = soup.find('div', class_="biz-website")
 		if website:
-			b['website'] = website.find('a').getText().strip(' \n').rstrip(' \n')
-			print b['website']
+			business['website'] = website.find('a').getText().strip(' \n').rstrip(' \n')
+			print business['website']
 		phone = soup.find('span', class_="biz-phone	")
 		if phone:
-			b['phone number'] = phone.getText().strip(' \n').rstrip(' \n')
-			print b['phone number']
+			business['phone number'] = phone.getText().strip(' \n').rstrip(' \n')
+			print business['phone number']
 		address = soup.find('address')
 		span = address.find_all('span')
-		b['address'] = {}
+		business['address'] = {}
 		for s in span:
 			field = s['itemprop']
-			b['address'][field] = s.getText()
-		print b['address']['streetAddress']
-		print b['address']['addressLocality'] + ', ' + b['address']['addressRegion']
-		print b['address']['postalCode']
+			business['address'][field] = s.getText()
+		print business['address']['streetAddress']
+		print business['address']['addressLocality'] + ', ' + business['address']['addressRegion']
+		print business['address']['postalCode']
 		print '\n'
 	else:
-		print 'Not found on yelp'
+		print 'Not found on yelp\n'
+
+def searchFacebook(business):
+	name = unicodedata.normalize('NFKD', business['name']).encode('ascii','ignore')
+	url = "https://www.facebook.com/search/more/?q="+ name.replace(' ', '+').lower() +"%20montreal"
+	soup = BeautifulSoup(opener.open(url).read())
+	div = soup.find_all('div')
+	return
+
+
+def searchGoogle(business):
+	name = unicodedata.normalize('NFKD', business['name']).encode('ascii','ignore')
+	url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+montreal"
+	soup = BeautifulSoup(opener.open(url).read())
+	if business['phone number'] == "Not found":
+		business['phone number'] = soup.find(text=re.compile("^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$"))
+	links = soup.find_all('cite')
+	a = soup.find_all('a')
+	fbstr = ''
+	for link in a:
+		match = re.search("facebook", str(link['href']))
+		if match:
+			fbstr = str((link['href']))
+			break
+	fbstr = fbstr.partition('&')[0]
+	business['facebook'] = business['facebook'].partition('=')[2]
+	print business['facebook']
+	# url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+montreal+twitter"
+
+
+for b in businesses:
+	print "Name: " + b['name']
+	b['address'] = "Not found"
+	b['phone number'] = "Not found"
+	b['website'] = "Not found"
+	b['facebook'] = "Not found"
+	b['twitter'] = "Not found"
+	searchYelp(b)
+	# Facebook requires login
+	# searchFacebook(b) 
+	# google is definitely on to me, I should be careful
+	searchGoogle(b)
+	
+
+
 
 
