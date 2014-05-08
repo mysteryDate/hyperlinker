@@ -52,11 +52,22 @@ def findMatchScore(searchName, foundName) :
 			if r > maxRatio:
 				maxRatio = r
 		bigR += maxRatio
-	return bigR / len(inputWords)
+	bigR2 = 0 # if the input has MORE words that the solution (rare)
+	# pdb.set_trace()
+	for fWord in foundWords:
+		maxRatio = 0
+		for iWord in inputWords:
+			r = Levenshtein.ratio(iWord.lower().replace("/'s", ''), fWord.lower().replace("/'s", ''))
+			if r > maxRatio:
+				maxRatio = r
+		bigR2 += maxRatio
+	bigR /= len(inputWords)
+	bigR2 /= len(foundWords)
+	return max(bigR, bigR2)
 
 def searchYellowpages(business):
 	url = business['yellowpages']
-	pdb.set_trace()
+	# pdb.set_trace()
 	soup = BeautifulSoup(opener.open(url).read())
 	if business['foundName'] == business['searchName']:
 		business['foundName'] = soup.find('h1', itemprop="name").getText().strip(' \n').rstrip(' \n')
@@ -76,24 +87,37 @@ def searchYellowpages(business):
 
 # search yelp
 def searchYelp(business):
+	# pdb.set_trace()
 	if not business['yelp']:
 		name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
 		url = "https://www.yelp.com/search?find_desc=" + name.replace(' ', '+').lower() + "&find_loc=Montreal"
 		soup = BeautifulSoup(opener.open(url).read())
 		a = soup.find('a', class_="biz-name")
-		bizname = str(a['href']).partition('#')[0]
-		newurl = "https://www.yelp.com" + bizname
-		soup = BeautifulSoup(opener.open(newurl).read())
-		foundName = soup.find('h1', class_="biz-page-title").getText().strip(' \n').rstrip(' \n')
-		foundName = unicodedata.normalize('NFKD', foundName).encode('ascii','ignore')
-		if findMatchScore(name, foundName) > 0.75:
-			business['yelp'] = newurl
+		if a:
+			bizname = str(a['href']).partition('#')[0]
+			newurl = "https://www.yelp.com" + bizname
+			soup = BeautifulSoup(opener.open(newurl).read())
+			titleName = soup.find('h1', class_="biz-page-title")
+			if titleName:
+				foundName = titleName.getText().strip(' \n').rstrip(' \n')
+				foundName = unicodedata.normalize('NFKD', foundName).encode('ascii','ignore')
+				if findMatchScore(name, foundName) > 0.75:
+					business['yelp'] = newurl
+				else:
+					# not found on yelp
+					return
+			else:
+				# something weird is happening
+				return
 		else:
-			print 'Not found on yelp\n'
+			# no luck
 			return
 	else:
 		newurl = business['yelp']
-		soup = BeautifulSoup(opener.open(newurl).read())
+		try:
+			soup = BeautifulSoup(opener.open(newurl).read())
+		except:
+			return 
 	business['foundName'] = soup.find('h1', class_="biz-page-title").getText().strip(' \n').rstrip(' \n')
 	website = soup.find('div', class_="biz-website")
 	if website:
@@ -117,6 +141,7 @@ def getLink(siteName, links):
 	for l in links:
 		match = re.search(siteName, str(l['href']))
 		if match:
+			# pdb.set_trace()
 			linkString = str((l['href']))
 			linkString = linkString.partition('&')[0]
 			linkString = linkString.partition('=')[2]
@@ -130,9 +155,14 @@ def searchGoogle(business):
 	spell = soup.find('a', class_="spell")
 	if spell:
 		actualName = spell['href'].partition('&')[0]
-		business['foundName'] = unicode(actualName.partition('=')[2].replace('+', ' ').replace(" montreal", ''), 'utf-8')
-	if not business['phone']:
-		business['phone'] = soup.find(text=re.compile("^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$"))
+		# pdb.set_trace()
+		bName = actualName.partition('=')[2].replace('+', ' ').replace(" montreal", '')
+		if type(bName) is not unicode:
+			bName = unicode(bName, 'utf-8')
+		b['foundName'] = bName
+	phone = soup.find(text=re.compile("^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$"))
+	if phone:
+		business['phone'] = phone
 	a = soup.find_all('a')
 	for s in sites:
 		business[s] = getLink(s, a)
@@ -153,7 +183,8 @@ for b in businesses:
 	if b['foundName'] != b['searchName']:
 		print "It's probably called: " + b['foundName']
 	searchYelp(b)
-	if not b['website'] or not b['address'] or not b['phone'] and b['yellowpages']:
+	# pdb.set_trace()
+	if not (b['website'] and b['address'] and b['phone']) and (not not b['yellowpages']):
 		searchYellowpages(b)
 	# Facebook requires login
 	# if b['facebook'] != '':
@@ -161,10 +192,16 @@ for b in businesses:
 	# 	searchFacebook(b) 
 	print b['foundName']
 	if findMatchScore(b['searchName'], b['foundName']) > 0.75:
-		print "website: " + b['website']
-		print "phone: " + b['phone']
-		print "address: " + b['address']
-		print "facebook" + b['facebook']
+		if b['website']:
+			print "website: " + b['website']
+		if b['phone']:
+			print "phone: " + b['phone']
+		if b['address']:
+			print "address: " + b['address']
+		if b['facebook']:
+			print "facebook: " + b['facebook']
+		if b['twitter']:
+			print "twitter: " + b['twitter']
 	else:
 		print "probably not what you're looking for"
 	print '\n'
