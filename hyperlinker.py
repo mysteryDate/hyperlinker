@@ -20,6 +20,7 @@ output = open(outFilePath, "w")
 fileData = textFile.readlines()
 textFile.close()
 businesses = []
+sites = ['facebook', 'yelp', 'yellowpages', 'urbanspoon']
 
 for line in fileData:
 	businesses.append({'name': unicode(line.rstrip(' \n'), 'utf-8')})
@@ -51,7 +52,7 @@ def findMatchScore(searchName, foundName) :
 
 # search yelp
 def searchYelp(business):
-	name = unicodedata.normalize('NFKD', business['name']).encode('ascii','ignore')
+	name = unicodedata.normalize('NFKD', business['actual name']).encode('ascii','ignore')
 	url = "https://www.yelp.com/search?find_desc=" + name.replace(' ', '+').lower() + "&find_loc=Montreal"
 	soup = BeautifulSoup(opener.open(url).read())
 	a = soup.find('a', class_="biz-name")
@@ -65,7 +66,7 @@ def searchYelp(business):
 		if website:
 			business['website'] = website.find('a').getText().strip(' \n').rstrip(' \n')
 			print business['website']
-		phone = soup.find('span', class_="biz-phone	")
+		phone = soup.find('span', class_="biz-phone")
 		if phone:
 			business['phone number'] = phone.getText().strip(' \n').rstrip(' \n')
 			print business['phone number']
@@ -78,7 +79,6 @@ def searchYelp(business):
 		print business['address']['streetAddress']
 		print business['address']['addressLocality'] + ', ' + business['address']['addressRegion']
 		print business['address']['postalCode']
-		print '\n'
 	else:
 		print 'Not found on yelp\n'
 
@@ -89,39 +89,52 @@ def searchFacebook(business):
 	div = soup.find_all('div')
 	return
 
+def getLink(siteName, links):
+	linkString = "Not found"
+	for l in links:
+		match = re.search(siteName, str(l['href']))
+		if match:
+			linkString = str((l['href']))
+			linkString = linkString.partition('&')[0]
+			linkString = linkString.partition('=')[2]
+			break
+	return linkString
 
 def searchGoogle(business):
 	name = unicodedata.normalize('NFKD', business['name']).encode('ascii','ignore')
 	url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+montreal"
 	soup = BeautifulSoup(opener.open(url).read())
+	spell = soup.find('a', class_="spell")
+	if spell:
+		actualName = spell['href'].partition('&')[0]
+		actualName = actualName.partition('=')[2].replace('+', ' ').replace(" montreal", '')
+		actualName
 	if business['phone number'] == "Not found":
 		business['phone number'] = soup.find(text=re.compile("^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$"))
-	links = soup.find_all('cite')
 	a = soup.find_all('a')
-	fbstr = ''
-	for link in a:
-		match = re.search("facebook", str(link['href']))
-		if match:
-			fbstr = str((link['href']))
-			break
-	fbstr = fbstr.partition('&')[0]
-	business['facebook'] = business['facebook'].partition('=')[2]
-	print business['facebook']
+	for s in sites:
+		business[s] = getLink(s, a)
+		print s + ': ' + business[s]
 	# url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+montreal+twitter"
 
 
 for b in businesses:
 	print "Name: " + b['name']
+	b['actual name'] = b['name']
 	b['address'] = "Not found"
 	b['phone number'] = "Not found"
 	b['website'] = "Not found"
-	b['facebook'] = "Not found"
 	b['twitter'] = "Not found"
-	searchYelp(b)
-	# Facebook requires login
-	# searchFacebook(b) 
+	for s in sites:
+		b[s] = "Not found"
 	# google is definitely on to me, I should be careful
 	searchGoogle(b)
+	if b['actual name'] != b['name']:
+		print "It's probably called: " + b['actual name']
+	# Facebook requires login
+	# searchFacebook(b) 
+	searchYelp(b)
+	print '\n'
 	
 
 
