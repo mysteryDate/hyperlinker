@@ -6,6 +6,7 @@ import re
 from bs4 import BeautifulSoup
 import Levenshtein
 import unicodedata
+import codecs
 import pdb
 
 opener = urllib2.build_opener()
@@ -13,10 +14,10 @@ opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
 inFilePath = "input.txt"
-outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
+outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.rtf"
 
 textFile = open(inFilePath, "U")
-output = open(outFilePath, "w")
+output = codecs.open(outFilePath, "w", 'utf-8')
 fileData = textFile.readlines()
 textFile.close()
 businesses = []
@@ -74,7 +75,9 @@ def searchYellowpages(business):
 	if not business['address']:
 		address = soup.find('address', itemprop="address")
 		if address:
-			business['address'] = address.getText().strip(' \n').rstrip(' \n')
+			span = address.find('span', itemprop="streetAddress")
+			if span:
+				business['address'] = span.getText().strip(' \n').rstrip(' \n')
 	if not business['phone']:
 		phone = soup.find('li', class_="phone")
 		if phone:
@@ -121,13 +124,15 @@ def searchYelp(business):
 	business['foundName'] = soup.find('h1', class_="biz-page-title").getText().strip(' \n').rstrip(' \n')
 	website = soup.find('div', class_="biz-website")
 	if website:
-		business['website'] = website.find('a').getText().strip(' \n').rstrip(' \n')
+		siteAddress = website.find('a').getText().strip(' \n').rstrip(' \n')
+		business['website'] = urllib2.unquote(siteAddress).decode("utf-8")
 	phone = soup.find('span', class_="biz-phone")
 	if phone:
 		business['phone'] = phone.getText().strip(' \n').rstrip(' \n')
 	address = soup.find('address')
 	if address:
-		business['address'] = address.getText().strip(' \n').rstrip(' \n')
+		span = address.find(itemprop="streetAddress")
+		business['address'] = span.getText().strip(' \n').rstrip(' \n')
 
 def searchFacebook(business):
 	name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
@@ -141,10 +146,11 @@ def getLink(siteName, links):
 	for l in links:
 		match = re.search(siteName, str(l['href']))
 		if match:
-			# pdb.set_trace()
-			linkString = str((l['href']))
+			pdb.set_trace()
+			linkString = l['href']
 			linkString = linkString.partition('&')[0]
 			linkString = linkString.partition('=')[2]
+			linkString = urllib2.unquote(linkString).decode("utf-8")
 			break
 	return linkString
 
@@ -172,6 +178,7 @@ def searchGoogle(business):
 
 for b in businesses:
 	print "Search: " + b['searchName']
+	b['found'] = False
 	b['foundName'] = b['searchName']
 	b['address'] = ''
 	b['phone'] = ''
@@ -192,9 +199,11 @@ for b in businesses:
 	# 	searchFacebook(b) 
 	print b['foundName']
 	if findMatchScore(b['searchName'], b['foundName']) > 0.75:
+		b['found'] = True
 		if b['website']:
 			print "website: " + b['website']
 		if b['phone']:
+			b['phone'] = b['phone'].replace('(', '').replace(')', '').replace(' ', '.').replace('-', '.')
 			print "phone: " + b['phone']
 		if b['address']:
 			print "address: " + b['address']
@@ -206,7 +215,19 @@ for b in businesses:
 		print "probably not what you're looking for"
 	print '\n'
 	
+for b in businesses:
+	output.write("Search: " + b['searchName'] + '\n')
+	if not b['found']:
+		output.write("Not found" + '\n')
+	else:
+		output.write(b['foundName'] + '\n')
+		printAttributes = ['address', 'phone', 'website', 'facebook', 'twitter']
+		for att in printAttributes:
+			if b[att]:
+				output.write(b[att] + '\n')
+	output.write('\n')
 
+output.close()
 
 
 
