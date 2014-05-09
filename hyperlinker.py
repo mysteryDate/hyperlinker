@@ -14,7 +14,7 @@ opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
 inFilePath = "input.txt"
-outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.rtf"
+outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
 
 textFile = open(inFilePath, "U")
 output = codecs.open(outFilePath, "w", 'utf-8')
@@ -150,7 +150,7 @@ def getLink(siteName, links):
 			linkString = l['href']
 			linkString = linkString.partition('&')[0]
 			linkString = linkString.partition('=')[2]
-			linkString = urllib2.unquote(linkString).decode("utf-8")
+			# linkString = urllib2.unquote(urllib2.unquote(linkString)).decode("utf-8")
 			break
 	return linkString
 
@@ -160,17 +160,16 @@ def searchGoogle(business):
 	soup = BeautifulSoup(opener.open(url).read())
 	spell = soup.find('a', class_="spell")
 	if spell:
-		actualName = spell['href'].partition('&')[0]
-		# pdb.set_trace()
-		bName = actualName.partition('=')[2].replace('+', ' ').replace(" montreal", '')
-		if type(bName) is not unicode:
-			bName = unicode(bName, 'utf-8')
-		b['foundName'] = bName
+		actualName = spell.getText()
+		if type(actualName) is not unicode:
+			actualName = unicode(actualName, 'utf-8')
+		b['foundName'] = actualName
 	phone = soup.find(text=re.compile("^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$"))
 	if phone:
 		business['phone'] = phone
 	a = soup.find_all('a')
 	for s in sites:
+		pdb.set_trace()
 		business[s] = getLink(s, a)
 		# print s + ': ' + business[s]
 	# url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+montreal+twitter"
