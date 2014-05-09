@@ -14,7 +14,7 @@ opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
 inFilePath = "input.txt"
-outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
+outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.rtf"
 
 textFile = open(inFilePath, "U")
 output = codecs.open(outFilePath, "w", 'utf-8')
@@ -25,7 +25,6 @@ sites = ['facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter']
 
 for line in fileData:
 	businesses.append({'searchName': unicode(line.rstrip(' \n'), 'utf-8')})
-	# pdb.set_trace()
 
 def removeSkipWords(words):
 	skipWords = ['au', 'le', 'de', 'the']
@@ -54,7 +53,6 @@ def findMatchScore(searchName, foundName) :
 				maxRatio = r
 		bigR += maxRatio
 	bigR2 = 0 # if the input has MORE words that the solution (rare)
-	# pdb.set_trace()
 	for fWord in foundWords:
 		maxRatio = 0
 		for iWord in inputWords:
@@ -68,10 +66,11 @@ def findMatchScore(searchName, foundName) :
 
 def searchYellowpages(business):
 	url = business['yellowpages']
-	# pdb.set_trace()
 	soup = BeautifulSoup(opener.open(url).read())
 	if business['foundName'] == business['searchName']:
-		business['foundName'] = soup.find('h1', itemprop="name").getText().strip(' \n').rstrip(' \n')
+		header = soup.find('h1', itemprop="name")
+		if header:
+			business['foundName'] = header.getText().strip(' \n').rstrip(' \n')
 	if not business['address']:
 		address = soup.find('address', itemprop="address")
 		if address:
@@ -90,7 +89,6 @@ def searchYellowpages(business):
 
 # search yelp
 def searchYelp(business):
-	# pdb.set_trace()
 	if not business['yelp']:
 		name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
 		url = "https://www.yelp.com/search?find_desc=" + name.replace(' ', '+').lower() + "&find_loc=Montreal"
@@ -121,7 +119,9 @@ def searchYelp(business):
 			soup = BeautifulSoup(opener.open(newurl).read())
 		except:
 			return 
-	business['foundName'] = soup.find('h1', class_="biz-page-title").getText().strip(' \n').rstrip(' \n')
+	header = soup.find('h1', class_="biz-page-title")
+	if header:
+		business['foundName'] = header.getText().strip(' \n').rstrip(' \n')
 	website = soup.find('div', class_="biz-website")
 	if website:
 		siteAddress = website.find('a').getText().strip(' \n').rstrip(' \n')
@@ -134,23 +134,14 @@ def searchYelp(business):
 		span = address.find(itemprop="streetAddress")
 		business['address'] = span.getText().strip(' \n').rstrip(' \n')
 
-def searchFacebook(business):
-	name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
-	url = "https://www.facebook.com/search/more/?q="+ name.replace(' ', '+').lower() +"%20montreal"
-	soup = BeautifulSoup(opener.open(url).read())
-	div = soup.find_all('div')
-	return
-
 def getLink(siteName, links):
 	linkString = ''
 	for l in links:
 		match = re.search(siteName, str(l['href']))
 		if match:
-			pdb.set_trace()
 			linkString = l['href']
 			linkString = linkString.partition('&')[0]
 			linkString = linkString.partition('=')[2]
-			# linkString = urllib2.unquote(urllib2.unquote(linkString)).decode("utf-8")
 			break
 	return linkString
 
@@ -169,10 +160,7 @@ def searchGoogle(business):
 		business['phone'] = phone
 	a = soup.find_all('a')
 	for s in sites:
-		pdb.set_trace()
 		business[s] = getLink(s, a)
-		# print s + ': ' + business[s]
-	# url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+montreal+twitter"
 
 
 for b in businesses:
@@ -189,13 +177,8 @@ for b in businesses:
 	if b['foundName'] != b['searchName']:
 		print "It's probably called: " + b['foundName']
 	searchYelp(b)
-	# pdb.set_trace()
 	if not (b['website'] and b['address'] and b['phone']) and (not not b['yellowpages']):
 		searchYellowpages(b)
-	# Facebook requires login
-	# if b['facebook'] != '':
-	# 	if b['address'] == '':
-	# 	searchFacebook(b) 
 	print b['foundName']
 	if findMatchScore(b['searchName'], b['foundName']) > 0.75:
 		b['found'] = True
@@ -213,7 +196,8 @@ for b in businesses:
 	else:
 		print "probably not what you're looking for"
 	print '\n'
-	
+
+output.write("{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf190\n{\fonttbl\f0\fswiss\fcharset0 Helvetica;}\n{\colortbl;\red255\green255\blue255;\red38\green38\blue38;\red52\green52\blue52;\red26\green26\blue26;\n\red249\green249\blue249;\red84\green84\blue84;}\n\margl1440\margr1440\vieww12600\viewh7800\viewkind0\n\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\n\n")
 for b in businesses:
 	output.write("Search: " + b['searchName'] + '\n')
 	if not b['found']:
