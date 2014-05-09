@@ -14,7 +14,7 @@ opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
 inFilePath = "input.txt"
-outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.rtf"
+outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
 
 textFile = open(inFilePath, "U")
 output = codecs.open(outFilePath, "w", 'utf-8')
@@ -197,7 +197,6 @@ for b in businesses:
 		print "probably not what you're looking for"
 	print '\n'
 
-output.write("{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf190\n{\fonttbl\f0\fswiss\fcharset0 Helvetica;}\n{\colortbl;\red255\green255\blue255;\red38\green38\blue38;\red52\green52\blue52;\red26\green26\blue26;\n\red249\green249\blue249;\red84\green84\blue84;}\n\margl1440\margr1440\vieww12600\viewh7800\viewkind0\n\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\n\n")
 for b in businesses:
 	output.write("Search: " + b['searchName'] + '\n')
 	if not b['found']:
@@ -207,8 +206,11 @@ for b in businesses:
 		printAttributes = ['address', 'phone', 'website', 'facebook', 'twitter']
 		for att in printAttributes:
 			if b[att]:
+				if att == 'facebook' or att == 'twitter':
+					output.write("{\field{\*\fldinst HYPERLINK "+att+"}{\fldrslt "+b[att]+"}}")
 				output.write(b[att] + '\n')
 	output.write('\n')
+
 
 output.close()
 
