@@ -64,6 +64,24 @@ def findMatchScore(searchName, foundName) :
 	bigR2 /= len(foundWords)
 	return max(bigR, bigR2)
 
+def searchFacebook(business):
+	pdb.set_trace()
+	url = business['facebook']
+	br.open(url)
+	# soup = BeautifulSoup(opener.open(url).read())
+	# if not business['address']:
+	# 	address = soup.find('span', itemprop='address')
+	# 	if address:
+	# 		business['address'] = address.find('a').getText()
+	# if not business['phone']:
+	# 	phone = soup.find('span', itemprop='telephone')
+	# 	if phone:
+	# 		business['phone'] = phone.getText()
+	# if not business['website']:
+	# 	website = soup.find('span', itemprop='url')
+	# 	if website:
+	# 		business['website'] = website.find('a').getText()
+
 def searchYellowpages(business):
 	url = business['yellowpages']
 	soup = BeautifulSoup(opener.open(url).read())
@@ -179,6 +197,8 @@ for b in businesses:
 	searchYelp(b)
 	if not (b['website'] and b['address'] and b['phone']) and (not not b['yellowpages']):
 		searchYellowpages(b)
+	# if not (b['website'] and b['address'] and b['phone']) and (not not b['facebook']):
+		# searchFacebook(b)
 	print b['foundName']
 	if findMatchScore(b['searchName'], b['foundName']) > 0.75:
 		b['found'] = True
