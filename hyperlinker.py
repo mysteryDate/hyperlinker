@@ -9,6 +9,23 @@ import unicodedata
 import codecs
 import pdb
 
+#for pages with javascript
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+from PyQt4.QtWebKit import *
+import sys
+class Render(QWebPage):
+  def __init__(self, url):
+    self.app = QApplication(sys.argv)
+    QWebPage.__init__(self)
+    self.loadFinished.connect(self._loadFinished)
+    self.mainFrame().load(QUrl(url))
+    self.app.exec_()
+
+  def _loadFinished(self, result):
+    self.frame = self.mainFrame()
+    self.app.quit()
+
 opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
@@ -65,24 +82,27 @@ def findMatchScore(searchName, foundName) :
 	return max(bigR, bigR2)
 
 def searchFacebook(business):
-	pdb.set_trace()
+	# pdb.set_trace()
 	url = business['facebook']
-	br.open(url)
-	# soup = BeautifulSoup(opener.open(url).read())
-	# if not business['address']:
-	# 	address = soup.find('span', itemprop='address')
-	# 	if address:
-	# 		business['address'] = address.find('a').getText()
-	# if not business['phone']:
-	# 	phone = soup.find('span', itemprop='telephone')
-	# 	if phone:
-	# 		business['phone'] = phone.getText()
-	# if not business['website']:
-	# 	website = soup.find('span', itemprop='url')
-	# 	if website:
-	# 		business['website'] = website.find('a').getText()
+	r = Render(url) # because javascript
+	html = unicode(r.frame.toHtml())
+	soup = BeautifulSoup(html)
+	r.app.quit()
+	if not business['address']:
+		address = soup.find('span', itemprop='address')
+		if address:
+			business['address'] = address.find('a').getText()
+	if not business['phone']:
+		phone = soup.find('span', itemprop='telephone')
+		if phone:
+			business['phone'] = phone.getText()
+	if not business['website']:
+		website = soup.find('span', itemprop='url')
+		if website:
+			business['website'] = website.find('a').getText()
 
 def searchYellowpages(business):
+	# pdb.set_trace()
 	url = business['yellowpages']
 	soup = BeautifulSoup(opener.open(url).read())
 	if business['foundName'] == business['searchName']:
@@ -142,8 +162,8 @@ def searchYelp(business):
 		business['foundName'] = header.getText().strip(' \n').rstrip(' \n')
 	website = soup.find('div', class_="biz-website")
 	if website:
-		siteAddress = website.find('a').getText().strip(' \n').rstrip(' \n')
-		business['website'] = urllib2.unquote(siteAddress).decode("utf-8")
+		siteAddress = urllib2.unquote(website.find('a')['href']).partition('=')[2].partition('&')[0]
+		business['website'] = siteAddress
 	phone = soup.find('span', class_="biz-phone")
 	if phone:
 		business['phone'] = phone.getText().strip(' \n').rstrip(' \n')
@@ -197,10 +217,12 @@ for b in businesses:
 	searchYelp(b)
 	if not (b['website'] and b['address'] and b['phone']) and (not not b['yellowpages']):
 		searchYellowpages(b)
-	# if not (b['website'] and b['address'] and b['phone']) and (not not b['facebook']):
-		# searchFacebook(b)
+	if not (b['website'] and b['address'] and b['phone']) and (not not b['facebook']):
+		searchFacebook(b)
 	print b['foundName']
-	if findMatchScore(b['searchName'], b['foundName']) > 0.75:
+	# if findMatchScore(b['searchName'], b['foundName']) > 0.75:
+	if True:
+		print findMatchScore(b['searchName'], b['foundName'])
 		b['found'] = True
 		if b['website']:
 			print "website: " + b['website']
@@ -216,8 +238,7 @@ for b in businesses:
 	else:
 		print "probably not what you're looking for"
 	print '\n'
-
-for b in businesses:
+	## write to file
 	output.write("Search: " + b['searchName'] + '\n')
 	if not b['found']:
 		output.write("Not found" + '\n')
@@ -226,8 +247,6 @@ for b in businesses:
 		printAttributes = ['address', 'phone', 'website', 'facebook', 'twitter']
 		for att in printAttributes:
 			if b[att]:
-				if att == 'facebook' or att == 'twitter':
-					output.write("{\field{\*\fldinst HYPERLINK "+att+"}{\fldrslt "+b[att]+"}}")
 				output.write(b[att] + '\n')
 	output.write('\n')
 
