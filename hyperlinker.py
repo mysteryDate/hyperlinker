@@ -30,7 +30,7 @@ opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
-inFilePath = "may_17_input.txt"
+inFilePath = "input.txt"
 outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
 
 textFile = open(inFilePath, "U")
@@ -235,19 +235,23 @@ for b in businesses:
 		searchTwitter(b)
 	# pdb.set_trace()
 	if not b['website']:
-		ignorewords = ['restomontreal', 'googleusercontent', 'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter']
+		ignorewords = ['restomontreal', 'googleusercontent', 'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter', 'foursquare']
 		div = b['gsoup'].find('div', id='search')
 		if div:
 			a = div.find_all('a')
 			for l in a:
+				# pdb.set_trace()
 				link = l['href']
 				if link:
 					ignore = False
 					words = link.partition('//')[2].partition('/')[0].split('.')
+					if not words[0]:
+						continue
 					for w in words:
 						if w in ignorewords:
 							ignore = True
 					if not ignore:
+						# pdb.set_trace()
 						b['website'] = link.partition('&')[0].partition('=')[2]
 						break
 

@@ -1,1 +1,26 @@
 part ion on “-“ too
+
+ignore: zagat, blogspot, wikipedia, tripadvisor, mtlblog
+maybe ignore: ledevoir, nightlife.ca, weblocal, montrealplus, profilecanada, qdc.ca, canpages.com
+
+maybe just look at the tld and check?
+
+check to see if websites are actualy websites
+
+reformat addresses
+
+hyperlinks?
+
+check the profile name twitter
+
+render facebook?
+
+boa bijoux
+chez cook
+Lefebvre & Filles - Bouchées de Bonheur: https://twitter.com/LEFEBVREetFille
+Tripes & Caviar
+
+Poissonnerie & Restaurant Rayan
+website: http://www.restaurantrayan.com
+phone: 514.735.6866
+address: 6080 Chemin de la Côte-des-Neiges

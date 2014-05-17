@@ -1,3 +1,5 @@
+Restaurant Blanche Neige
+Boutique Bijouterie Pot-Pourri
 Les Tontons Flingueurs
 Charcuterie Euro Deli
 Fleuriste Mayfair
@@ -25,7 +27,7 @@ Tripes et Caviar
 La Queue de Poisson
 Station W
 Schwartz's
- Snowdon Deli 
+Snowdon Deli 
 The Main 
 Hof Keltsen 
 Lester's 
@@ -41,7 +43,7 @@ Le Gros Jambon
 Deville Dinerbar 
 Wilensky's 
 The Greenspot 
- Nouveau Palais
+Nouveau Palais
 The Green Spot 
 Montreal Pool Room 
 Dirty Dogs 
@@ -69,4 +71,3 @@ General 54
 Cinderella Garbage 
 Charlotte Hosten   
 Il était deux fois 
-
