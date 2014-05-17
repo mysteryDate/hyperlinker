@@ -30,7 +30,7 @@ opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
-inFilePath = "input.txt"
+inFilePath = "may_17_input.txt"
 outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
 
 textFile = open(inFilePath, "U")
@@ -183,10 +183,22 @@ def getLink(siteName, links):
 			break
 	return linkString
 
+#only if twitter isn't found
+def searchTwitter(business):
+	name = unicodedata.normalize('NFKD', business['foundName']).encode('ascii','ignore')
+	url = "https://twitter.com/search?q="+name.replace(' ', '%20')+"%20montreal&mode=users"
+	soup = BeautifulSoup(opener.open(url).read())
+	a = soup.find('a', 'js-user-profile-link')
+	if a:
+		link = a['href']
+		if link:
+			business['twitter'] = "twitter.com" + link
+
 def searchGoogle(business):
 	name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
 	url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+montreal"
-	soup = BeautifulSoup(opener.open(url).read())
+	b['gsoup'] = BeautifulSoup(opener.open(url).read())
+	soup = b['gsoup']
 	spell = soup.find('a', class_="spell")
 	if spell:
 		actualName = spell.getText()
@@ -217,8 +229,28 @@ for b in businesses:
 	searchYelp(b)
 	if not (b['website'] and b['address'] and b['phone']) and (not not b['yellowpages']):
 		searchYellowpages(b)
-	if not (b['website'] and b['address'] and b['phone']) and (not not b['facebook']):
-		searchFacebook(b)
+	# if not (b['website'] and b['address'] and b['phone']) and (not not b['facebook']):
+		# searchFacebook(b)
+	if not b['twitter']:
+		searchTwitter(b)
+	# pdb.set_trace()
+	if not b['website']:
+		ignorewords = ['restomontreal', 'googleusercontent', 'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter']
+		div = b['gsoup'].find('div', id='search')
+		if div:
+			a = div.find_all('a')
+			for l in a:
+				link = l['href']
+				if link:
+					ignore = False
+					words = link.partition('//')[2].partition('/')[0].split('.')
+					for w in words:
+						if w in ignorewords:
+							ignore = True
+					if not ignore:
+						b['website'] = link.partition('&')[0].partition('=')[2]
+						break
+
 	print b['foundName']
 	# if findMatchScore(b['searchName'], b['foundName']) > 0.75:
 	if True:
