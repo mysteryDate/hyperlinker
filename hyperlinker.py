@@ -30,7 +30,7 @@ opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
-inFilePath = "input_may23.txt"
+inFilePath = "input.txt"
 outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
 
 textFile = open(inFilePath, "U")
@@ -90,7 +90,6 @@ def findMatchScore(searchName, foundName) :
 	return max(bigR, bigR2)
 
 def searchFacebook(business):
-	# pdb.set_trace()
 	url = business['facebook']
 	r = Render(url) # because javascript
 	html = unicode(r.frame.toHtml())
@@ -110,7 +109,6 @@ def searchFacebook(business):
 			business['website'] = website.find('a').getText()
 
 def searchYellowpages(business):
-	# pdb.set_trace()
 	url = business['yellowpages']
 	soup = BeautifulSoup(opener.open(url).read())
 	if business['foundName'] == business['searchName']:
@@ -180,6 +178,8 @@ def searchYelp(business):
 		span = address.find(itemprop="streetAddress")
 		if span:
 			business['address'] = span.getText().strip(' \n').rstrip(' \n')
+		else:
+			business['address'] = address.getText().strip(' \n').rstrip(' \n')
 
 def getLink(siteName, links):
 	linkString = ''
@@ -242,14 +242,12 @@ for b in businesses:
 		# searchFacebook(b)
 	if not b['twitter']:
 		searchTwitter(b)
-	# pdb.set_trace()
 	if not b['website']:
 		ignorewords = ['restomontreal', 'googleusercontent', 'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter', 'foursquare', 'zagat', 'blogspot', 'tripadvisor']
 		div = b['gsoup'].find('div', id='search')
 		if div:
 			a = div.find_all('a')
 			for l in a:
-				# pdb.set_trace()
 				link = l['href']
 				if link:
 					ignore = False
@@ -260,9 +258,21 @@ for b in businesses:
 						if w in ignorewords:
 							ignore = True
 					if not ignore:
-						# pdb.set_trace()
 						b['website'] = link.partition('&')[0].partition('=')[2]
 						break
+
+	if not b['address'] or not b['phone']:
+		pic = b['gsoup'].find('img', src="/mapfiles/marker-noalpha.png")
+		if pic:
+			td = pic.parent.next_sibling
+			if td:
+				text = td.getText()	
+				if text: #these nested condtionals are getting annoying
+					if not b['phone']:
+						b['phone'] = '(' + text.partition('(')[2]
+					if not b['address']:
+						b['address'] = text.partition('(')[0]
+
 
 	print b['foundName']
 	# if findMatchScore(b['searchName'], b['foundName']) > 0.75:
