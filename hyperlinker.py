@@ -30,7 +30,7 @@ opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
-inFilePath = "input.txt"
+inFilePath = "input_may23.txt"
 outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
 
 textFile = open(inFilePath, "U")
@@ -41,7 +41,15 @@ businesses = []
 sites = ['facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter']
 
 for line in fileData:
-	businesses.append({'searchName': unicode(line.rstrip(' \n'), 'utf-8')})
+	name = unicode(line.rstrip(' \n').strip(), 'utf-8').replace('&', 'and')
+	if name:
+		if name[-1] == ':':
+			continue
+		else:
+			businesses.append({'searchName': name})
+
+for b in businesses:
+	print b['searchName']
 
 def removeSkipWords(words):
 	skipWords = ['au', 'le', 'de', 'the']
@@ -170,7 +178,8 @@ def searchYelp(business):
 	address = soup.find('address')
 	if address:
 		span = address.find(itemprop="streetAddress")
-		business['address'] = span.getText().strip(' \n').rstrip(' \n')
+		if span:
+			business['address'] = span.getText().strip(' \n').rstrip(' \n')
 
 def getLink(siteName, links):
 	linkString = ''
@@ -235,7 +244,7 @@ for b in businesses:
 		searchTwitter(b)
 	# pdb.set_trace()
 	if not b['website']:
-		ignorewords = ['restomontreal', 'googleusercontent', 'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter', 'foursquare']
+		ignorewords = ['restomontreal', 'googleusercontent', 'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter', 'foursquare', 'zagat', 'blogspot', 'tripadvisor']
 		div = b['gsoup'].find('div', id='search')
 		if div:
 			a = div.find_all('a')

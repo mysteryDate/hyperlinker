@@ -15,12 +15,7 @@ check the profile name twitter
 
 render facebook?
 
-boa bijoux
-chez cook
-Lefebvre & Filles - Bouchées de Bonheur: https://twitter.com/LEFEBVREetFille
-Tripes & Caviar
+filter out blank spaces
 
-Poissonnerie & Restaurant Rayan
-website: http://www.restaurantrayan.com
-phone: 514.735.6866
-address: 6080 Chemin de la Côte-des-Neiges
+add pagesjaunes.ca
+Restaurant Au Pres De MA Blonde didn't find yelp
