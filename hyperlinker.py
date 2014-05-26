@@ -11,21 +11,21 @@ import codecs
 import pdb
 
 #for pages with javascript
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-from PyQt4.QtWebKit import *
-import sys
-class Render(QWebPage):
-  def __init__(self, url):
-    self.app = QApplication(sys.argv)
-    QWebPage.__init__(self)
-    self.loadFinished.connect(self._loadFinished)
-    self.mainFrame().load(QUrl(url))
-    self.app.exec_()
+# from PyQt4.QtGui import *
+# from PyQt4.QtCore import *
+# from PyQt4.QtWebKit import *
+# import sys
+# class Render(QWebPage):
+#   def __init__(self, url):
+#     self.app = QApplication(sys.argv)
+#     QWebPage.__init__(self)
+#     self.loadFinished.connect(self._loadFinished)
+#     self.mainFrame().load(QUrl(url))
+#     self.app.exec_()
 
-  def _loadFinished(self, result):
-    self.frame = self.mainFrame()
-    self.app.quit()
+#   def _loadFinished(self, result):
+#     self.frame = self.mainFrame()
+#     self.app.quit()
 
 opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
@@ -40,6 +40,7 @@ fileData = textFile.readlines()
 textFile.close()
 businesses = []
 sites = ['facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter']
+# pdb.set_trace()
 
 for line in fileData:
 	name = unicode(line.rstrip(' \n').strip(), 'utf-8').replace('&', 'and')
@@ -174,8 +175,9 @@ def searchYelp(business):
 	phone = soup.find('span', class_="biz-phone")
 	if phone:
 		business['phone'] = phone.getText().strip(' \n').rstrip(' \n')
-	address = soup.find('address')
-	if address:
+	addy = soup.find_all('address')
+	if addy:
+		address = addy[-1]
 		span = address.find(itemprop="streetAddress")
 		if span:
 			business['address'] = span.getText().strip(' \n').rstrip(' \n')
