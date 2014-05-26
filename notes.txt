@@ -19,3 +19,8 @@ filter out blank spaces
 
 add pagesjaunes.ca
 Restaurant Au Pres De MA Blonde didn't find yelp
+
+http://regexpal.com/
+for addresses:
+\d{1,5}[,]{0,1}[ ]{0,1}[a-zA-Z \.'-]*
+(maybe)
