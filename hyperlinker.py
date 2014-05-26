@@ -172,17 +172,19 @@ def searchYelp(business):
 	if website:
 		siteAddress = urllib2.unquote(website.find('a')['href']).partition('=')[2].partition('&')[0]
 		business['website'] = siteAddress
-	phone = soup.find('span', class_="biz-phone")
-	if phone:
-		business['phone'] = phone.getText().strip(' \n').rstrip(' \n')
-	addy = soup.find_all('address')
-	if addy:
-		address = addy[-1]
-		span = address.find(itemprop="streetAddress")
-		if span:
-			business['address'] = span.getText().strip(' \n').rstrip(' \n')
-		else:
-			business['address'] = address.getText().strip(' \n').rstrip(' \n')
+	if not business['phone']:
+		phone = soup.find('span', class_="biz-phone")
+		if phone:
+			business['phone'] = phone.getText().strip(' \n').rstrip(' \n')
+	if not business['address']:
+		addy = soup.find_all('address')
+		if addy:
+			address = addy[-1]
+			span = address.find(itemprop="streetAddress")
+			if span:
+				business['address'] = span.getText().strip(' \n').rstrip(' \n')
+			else:
+				business['address'] = address.getText().strip(' \n').rstrip(' \n')
 
 def getLink(siteName, links):
 	linkString = ''
@@ -223,6 +225,16 @@ def searchGoogle(business):
 	a = soup.find_all('a')
 	for s in sites:
 		business[s] = getLink(s, a)
+	pic = soup.find('img', src="/mapfiles/marker-noalpha.png")
+	if pic:
+		td = pic.parent.next_sibling
+		if td:
+			text = td.getText()	
+			if text: #these nested condtionals are getting annoying
+				if not b['phone']:
+					b['phone'] = '(' + text.partition('(')[2]
+				if not b['address']:
+					b['address'] = text.partition('(')[0]
 
 
 for b in businesses:
@@ -263,20 +275,6 @@ for b in businesses:
 					if not ignore:
 						b['website'] = link.partition('&')[0].partition('=')[2]
 						break
-
-	if not b['address'] or not b['phone']:
-		pic = b['gsoup'].find('img', src="/mapfiles/marker-noalpha.png")
-		if pic:
-			td = pic.parent.next_sibling
-			if td:
-				text = td.getText()	
-				if text: #these nested condtionals are getting annoying
-					if not b['phone']:
-						b['phone'] = '(' + text.partition('(')[2]
-					if not b['address']:
-						b['address'] = text.partition('(')[0]
-
-
 	print b['foundName']
 	# if findMatchScore(b['searchName'], b['foundName']) > 0.75:
 	if True:
