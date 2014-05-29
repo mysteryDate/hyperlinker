@@ -1,6 +1,6 @@
 Search: Freak Lunchbox
 Freak Lunchbox
-3680 Saint Laurent Boulevard, Montréal, QC H2X 2V5
+3680 Saint-Laurent Boulevard
 514.284.0006
 http://www.freaklunchbox.com
 https://www.facebook.com/pages/Freak-Lunchbox/187576427948219
@@ -8,22 +8,22 @@ https://twitter.com/Freak_Lunchbox
 
 Search: Sucreries Soleil
 Sucrerie Du Soleil
-1951 Avenue Du Mont-Royal Est, Montreal, QC H2H 1J5
+1951 Du Mont-Royal Avenue East
 514.529.8688
 http://www.montrealplus.ca/montreal/venues/sucrerie-du-soleil-fr
 
 Search: Biscuiterie Oscar
 Biscuiterie Oscar Inc
-6356 Rue Saint-Hubert, Montreal, QC H2S 2M2
-514.272.8415
+3755 Ontario Street East
+514.527.0415
 oscar.qc.ca
 https://fr-ca.facebook.com/BiscuiterieOscarMontreal
 
 Search: Dulceria
 Dulceria
-3545 Swail Av, Montreal, QC H3T 1P5
+3545 Swail Avenue
 514.739.8080
-http://montreal.cylex.ca/company/dulceria-inc-17362221.html
+http://www.weblocal.ca/dulceria-montreal-qc.html
 
 Search: Bonsscoops
 Bonsscoops
@@ -39,41 +39,42 @@ twitter.com/Wellington_NZ
 
 Search: Sucre Bleu
 Sucre Bleu
-1741, Rue Saint-Denis, Montreal, QC H2X 3K4
+1741 Saint-Denis Street
 514.282.1440
 http://www.canpages.ca/page/fr/QC/montreal/sucre-bleu/3221235
 https://twitter.com/LeSucreBleu
 
 Search: Sparkles Confections
 Sparkles Confections
-5615 Avenue de Monkland, Montréal, QC H4A 1E3
+5615 Ave. De Monkland
 514.657.3900
 http://www.sparklescandy.com
 https://www.facebook.com/pages/Sparkles-Confections/183202677928%3Fsk%3Dreviews
 
 Search: Carré Confiserie
 Carre Confiseries
-1502 Rue de Bleury, Montréal, QC H3A 2J2
+1502 De Bleury Street
 514.507.7377
 http://www.carreconfiseries.com
 https://www.facebook.com/pages/Carr%25C3%25A9-Confiseries/323766891049978
 
 Search: Auprès de ma Blonde
 Restaurant Au Pres De MA Blonde
-3845 Saint-Denis Rue, Montreal, QC H2W 2M4
+3845 Saint-Denis Street
 514.845.5385
+http://www.restaurant.ca/comment.php%3Fsearch_type%3Dquick_search%26amp%3Bsearch_name%3D%26amp%3Bsearch_area_id%3D!!99!!%26amp%3Bsearch_city%3D!!99!!%26amp%3Bsearch_wine%3D%26amp%3BCuisine_id%3D!!99!!%26amp%3BPrice_id%3D!!99!!%26amp%3Bsearch_level1%3D4%26amp%3Blang%3Dfr%26amp%3Bpartner%3D%26amp%3Boffset%3D0%26amp%3Bestablishment_id%3D903RSTMTL
 https://fr-fr.facebook.com/pages/Bistro-Aupr%25C3%25A8s-de-ma-blonde/161122280607626
 
 Search: Café Santropol
 Café Santropol
-3990, Rue Saint-Urbain, Montreal, QC H2W 1T7
+3990 St Urbain St
 514.842.3110
 http://www.santropol.com
 https://www.facebook.com/pages/Caf%25C3%25A9-Santropol/153696361053
 
 Search: Benelux Verdun
 Benelux
-4028 rue Wellington, Verdun, QC H4G 3M6
+4026 Wellington Street
 514.508.5592
 http://www.brasseriebenelux.com/
 https://www.facebook.com/pages/Benelux-Verdun/225451444246820
@@ -81,54 +82,53 @@ twitter.com/MontrealBenelux
 
 Search: Sainte-Élisabeth
 Le Sainte Elisabeth
-1412, rue Sainte-Elisabeth, Montréal, QC H2X 3C6
+1412 Sainte Élisabeth Street
 514.286.4302
 http://www.ste-elisabeth.com
 https://fr-fr.facebook.com/pages/Pub-Le-Sainte-%25C3%2589lisabeth/157065694318646
 
 Search: Casa del Popolo
 Casa Del Popolo
-4873, Boul Saint-Laurent, Montreal, QC H2T 1R6
+4873 Saint-Laurent Boulevard
 514.284.3804
 http://www.casadelpopolo.com/
 https://www.facebook.com/casasala
 
 Search: Jardin Nelson
 Jardin Nelson
-407, Place Jacques-Cartier, Montréal, QC H2Y 3B1
+407 Place Jacques Cartier
 514.861.5731
 http://www.jardinnelson.com
 twitter.com/JardinNelson
 
 Search: Bistro des Moulins
 Bistro Des Moulins
-10897 Du Pont Rue, Montreal, QC H2B 2H3
-514.850.4222
-http://www.citehistoria.qc.ca
+10897 Du Pont Street
+514.850.0322
+http://www.citehistoria.qc.ca/bistro.html
 https://fr-fr.facebook.com/Bistro.des.moulins
 
 Search: Vices et Versa
 Vices et Versa
-6631Blvd St-Laurent, Montreal, QC H2S 3C5
+6631 Saint-Laurent Boulevard
 514.272.2498
 http://www.vicesetversa.com
-https://fr-ca.facebook.com/pages/Les-sessions-de-musique-traditionnelle-du-Vices-et-Versa/150516238302695
 
 Search: Touski
 Café Touski
-2361 Rue Ontario E, Montréal, QC H2K 1W1
+2361 Ontario Street East
 514.524.3113
 http://www.touski.org/
 
 Search: Caffè Italia
 Caffè Italia
-6840 Boulevard Saint-Laurent, Montreal, QC H2S 3C7
+6840 Saint-Laurent Boulevard
 514.495.0059
 http://www.blackbookmag.com/guides/details/cafe-italia-little-italy-little-italy-little-italy
 
 Search: Café Club Social
 Club Social
-180 St-viateur Ouest, Montréal, QC H2T 2L4
+180 St-Viateur West
 514.495.0114
 http://adbeus.com/mile-end/cafe-club-social-mile-end-montreal/
 https://www.facebook.com/cafeclubsocial
@@ -136,40 +136,39 @@ twitter.com/catherinebarry
 
 Search: Café Olympico
 Café Olimpico
-124 St-Viateur Ouest, Montréal, QC H2T 2X8
+124 St-Viateur Street West
 514.495.0746
 http://www.cafeolimpico.com
 https://www.facebook.com/pages/Caf%25C3%25A9-Olimpico/162439503768792
 
 Search: Café Central
 Cafe Central Portugais
-4051 Saint-Dominique Rue, Montreal, QC H2W 2A6
+4051 Saint-Dominique Street
 514.289.9367
 http://montreal.about.com/od/foodwine/ss/brasserie-central-westmount-montreal-french-brasserie-evelyn-reid.htm
 
 Search: Café Genova
 Cafe Genova
-507 Rue Saint-Zotique E, Montreal, QC H2S 1M2
+507 Saint Zotique Street East
 514.271.9400
-http://www.forlocations.ca/6103410/cafegenova-montreal/qc/507-saint-zotique-rue-east
 https://fr-fr.facebook.com/pages/Caf%25C3%25A9-Genova/117954044882689
 
 Search: Caffè San Simeon
 Caffè San Simeon
-39 Dante, Montréal, QC H2S 1J6
+39 Dante Street
 514.272.7386
 http://www.caffesansimeon.com
 https://twitter.com/caffesansimeon
 
 Search: Café Cherrier
 Café Cherrier
-3635, rue Saint-Denis, Montreal, QC H2X 3L6
+3635 Saint-Denis Street
 514.843.4308
 http://www.cafecherrier.ca
 
 Search: Phyllo Bar Melina's
 Phyllo Bar Melina’s
-5733 Avenue Du Parc, Montréal, QC H2V 4G9
+5733 Du Parc
 514.270.1675
 http://voir.ca/voir-la-vie/gastronomie/2012/05/03/melinas-phyllo-bar-phyllo-mania/
 https://fr-fr.facebook.com/PhylloBarMelina
@@ -177,51 +176,50 @@ https://twitter.com/MelinasMontreal
 
 Search: Café La Tazza
 Cafe La Tazza
-3922 Wellington Rue, Verdun, QC H4G 1V3
+3922 Wellington
 514.768.3940
 http://www.citeeze.com/resto/5891
 https://fr-ca.facebook.com/pages/Cafe-La-Tazza/111099938938182
 
 Search: La Panthère Verte
 La Panthère Verte - CENTRE VILLE
-2153 Rue Mackay, Montréal, QC H3G 2J2
-514.903.4744
+2153 Mackay Street
+514.508.5564
 http://www.lapanthereverte.com/
 https://www.facebook.com/pages/La-Panth%25C3%25A8re-verte-The-Green-Panther/118177785414
 
 Search: Crudessence
 Crudessence
-2157 Rue Mackay, Montréal, QC H3G 2J2
-514.664.5188
+2157 Mackay Street
+514.510.9299
 http://www.crudessence.com/
 https://fr-ca.facebook.com/Crudessence
 twitter.com/Crudessence
 
 Search: Chu Chai
 ChuChai
-4088 Saint-Denis Rue, Montreal, QC H2W 2M5
+4088 Saint-Denis Street
 514.843.4194
 http://www.chuchai.com
 https://fr-fr.facebook.com/pages/ChuChai/139976182715558
 
 Search: Resonance
 Résonance Café
-5175A Avenue Du Parc, Montréal, QC H2V 4G4
+5175A Du Parc Avenue
 514.894.7543
 http://www.resonancecafe.com/
 https://www.facebook.com/resonancecafe
 
 Search: Aux Vivres
 Aux Vivres
-4631, Boulevard Saint-laurent, Montréal, QC H2T 1R2
+4631 Saint-Laurent Boulevard
 514.842.3479
 http://www.auxvivres.com
-https://fr-fr.facebook.com/AuxVivresVegan
 twitter.com/AuxVivres
 
 Search: Lola Rossa
 Lola Rosa Cafe
-545 Rue Milton, Montreal, QC H2X 1W5
+545 Milton St
 514.287.9337
 http://www.lola-rosa.ca
 https://www.facebook.com/pages/Lola-Rosa-Milton/8569531333
@@ -229,214 +227,13 @@ https://twitter.com/LolaRosaTweet
 
 Search: Pushaps
 Pushap
-5195 rue Paré, Montreal, QC H4P 1P4
+5195 Paré Street
 514.737.4527
 http://www.pushaprestaurant.com/
 
 Search: Bonny's
 Bonnys
-1748 Rue Notre-Dame O, Montreal, QC H3J 1N6
+1748 Notre-Dame Street West
 514.931.4136
 http://www.bonnys.ca/home.htm
-
-Search: La Lumière du Mile End
-La Lumiere du Mile End
-214 Bernard Avenue, Montréal, QC H2V 4K8
-514.658.4949
-http://lalumieredumileend.com/
-https://www.facebook.com/lalumieredumilend
-
-Search: Excentris
-Ex-Centris
-3536 Boul St-Laurent, Montréal, QC H2X 2V1
-514.847.2206
-http://cinemaexcentris.com/
-
-Search: Théâtre Outremont
-Théatre Outremont
-1240, rue Bernard Ouest, Outremont, QC H2V 1V6, Canada
-514.495.9944
-http://www.theatreoutremont.ca
-
-Search: Cinéma Beaubien
-Cinéma Beaubien
-2396 rue Beaubien Est, Montreal, QC H2G 1N2, Canada
-514.721.6060
-http://cinemabeaubien.com/
-https://www.facebook.com/CinemaBeaubien%3Fref%3Dstream%26hc_location%3Dstream
-
-Search: Cinéma du Parc
-Cinéma du Parc
-3575, Avenue Du Parc, Montréal, QC H2X 3P9
-514.281.1900
-http://www.cinemaduparc.com
-twitter.com/LeCinemaduparc
-
-Search: Cinéma Cineplex Odeon du Quartier Latin
-Cineplex Quartier Latin
-350 Rue Emery, Montreal, QC H2X 1J1, Canada
-514.849.2244
-http://www.cineplex.com/Cinemas/DetailsCinemas/Cinema-Cineplex-Odeon-Quartier-Latin.aspx%3Fdate%3D2014-2-8
-
-Search: Cinéma Cineplex Odeon Forum
-Cinéma Cineplex Odeon Forum
-514.904.1277
-http://www.cineplex.com/Theatre/cinema-cineplex-odeon-forum
-twitter.com/CineplexMovies
-
-Search: Dollar Cinema
-Dollar Cinéma
-6900, Boulevard Décarie, Montréal, QC H3X 2T8
-514.739.0536
-http://www.dollarcinema.ca
-https://twitter.com/SaveOnMovies
-
-Search: Cinema Politica
-Cinema Politica
-http://www.cinemapolitica.org/concordia
-
-Search: La Cinémathèque Québécoise
-Cinémathèque Québécoise
-335 De Maisonneuve Boul E, Montreal, QC H2X 1K1, Canada
-514.842.9763
-cinematheque.qc.ca
-
-Search: Wellington
-Restaurant Wellington
-3629, Rue Wellington, Montréal, QC H4G
-514.419.1646
-http://www.restaurantwellington.com
-https://www.facebook.com/pages/Restaurant-Wellington/245902322177672
-twitter.com/Wellington_NZ
-
-Search: Fleuriste Le Chrysanthème
-Fleuriste Chrysantheme Enr (Le)
-3785 Wellington Rue, Verdun, QC H4G 1V1, Canada
-514.767.4657
-http://www.fleuristelechrysantheme.com/
-https://fr-ca.facebook.com/fleuristelechrysanthemeverdun
-
-Search: Boulangerie Patisserie Wellington
-Boulangerie Pâtisserie Wellington
-3990, rue Wellington
-514.658.3646
-http://sweetlees.ca/
-https://fr-ca.facebook.com/sweetleesbakery
-twitter.com/Wellington_NZ
-
-Search: Boulangerie Rustique Sweet Lee's
-Sweet Lee’s Rustic Bakery
-291 Beaudoin Street, Montréal, QC H4C 2Y3
-514.885.3504
-http://sweetlees.ca
-https://fr-ca.facebook.com/sweetleesbakery
-
-Search: Branche d'Olivier
-Branche d’Olivier
-4342, Rue Wellington, Verdun, QC H4G 1W4
-514.768.5930
-http://mahifa.com/
-
-Search: Le Paradis Gourmand
-Le Paradis Gourmand
-514.508.4855
-http://www.leparadisgourmand.com/
-https://fr-fr.facebook.com/LeParadisGourmand
-
-Search: Game Keeper
-Game Keeper Jeux Et Accessoires
-4425 Wellington Street, Montréal, QC H4G 1W4
-438.380.3939
-gamekeeper.ca
-https://fr-fr.facebook.com/pages/Game-Keeper-Verdun/151602031600286
-
-Search: Librairie de Verdun
-La Librairie de Verdun
-4455 Rue Wellington, Verdun, QC H4G 1W6, Canada
-514.769.2321
-http://www.lalibrairiedeverdun.com/
-https://fr-ca.facebook.com/LaLibrairiedeVerdun
-twitter.com/librairieverdun
-
-Search: La Mistinguette
-La Mistinguette
-4537 Rue Wellington, Verdun, QC H4G, Canada
-514.508.8887
-http://boutiquelamistinguette.wordpress.com/
-https://fr-fr.facebook.com/boutiquelamistinguette
-
-Search: La Baobab Café
-Le Baobab
-4800, rue Wellington, Verdun, QC H4G 1X4
-514.509.1335
-http://www.nightlife.ca/ou-aller/le-baobab-caf%25C3%25A9
-https://fr-ca.facebook.com/pages/Le-Baobab-caf%25C3%25A9/165900173449505
-
-Search: Fromagerie Copette et Cie
-Copette & Cie
-4650 Rue Wellington, Verdun, QC H4G 1W8
-514.761.2727
-http://fromageriecopette.com/
-https://fr-ca.facebook.com/pages/Fromagerie-Copette-Et-Cie/353549351359087
-twitter.com/BasseCopette
-
-Search: Maison de Thé Cha Noir
-Maison de Thé Cha Noir
-4646, rue Wellington, Verdun, QC H4G 1W9
-514.769.1242
-http://www.cha-noir.com
-
-Search: Bar Alexandraplatz
-Alexandraplatz
-6731 de L'esplanade, Montréal, QC H2V 4S9
-438.935.6731
-http://www.alexandraplatzbar.com/
-
-Search: Lawrence Restaurant
-Lawrence Restaurant
-5201 Blvd St. Laurent, Montréal, QC H2T 2L9
-514.503.1070
-http://www.lawrencerestaurant.com/
-lawrence+restaurant+montreal+twitter
-
-Search: Restaurant État-Major
-Etat-Major
-4005 Ontario E, Montréal, QC H1W
-514.905.8288
-http://www.etatmajor.ca/
-https://www.facebook.com/etatmajor.ca
-
-Search: Marché 4751
-Marché 4751
-4751 rue Sainte-Catherine Est, Montréal, QC H1V 1Z5
-514.903.6775
-http://www.marche4751.com
-https://fr-ca.facebook.com/pages/March%25C3%25A9-4751/115072491910389
-
-Search: Terre À Soi
-Terre À Soi, Boutique Écoresponsable
-4696 Rue St-Catherine E, Montréal, QC H1V 2X3
-514.759.8772
-http://www.terreasoi.coop
-https://fr-fr.facebook.com/terreasoi
-
-Search: Vélo Espresso
-Velo Espresso
-1269 Rue Amherst, Montreal, QC H2L 3K9
-514.596.0655
-http://www.veloespresso.com/
-https://fr-fr.facebook.com/veloespresso
-
-Search: Coccinelle Jaune
-Coccinelle Jaune
-4236, rue Sainte-Catherine Est, Montréal, QC H1V 1X3
-514.259.9038
-http://www.coccinellejaune.com
-
-Search: Bières etc.
-Bières Etc
-4204 Sainte-Catherine E, Montréal, QC H1V 1X3
-514.439.5627
-http://www.bieresetc.ca
-https://fr-fr.facebook.com/pages/Bi%25C3%25A8res-etc/115545921834640
 

@@ -9,43 +9,57 @@ textFile = open(inFilePath, "U")
 fileData = textFile.readlines()
 textFile.close()
 
-re.UNICODE
-
 # r = re.compile("\A\d{1,5}[,]{0,1}[ ]{0,1}[\w \.'-]*", re.UNICODE)
-r = re.compile("[A-Za-z]", re.UNICODE)
-streetAdresses = []
+numRegex = re.compile("\A\d{1,5}[A-Z]{1}[ ,]|\A\d{1,5}", re.UNICODE)
+addresses = []
 
 for line in fileData:
-	secs = line.split(',')
-	# print secs
-	# pdb.set_trace()
-	m = r.search(secs[0])
-	s = ""
-	if m:
-		s = secs[0]
+	address = {}
+	s = line
+	num = numRegex.findall(line)[0]
+	if num:
+		num = num.rstrip(' ,')
+		s = s.replace(num, '').lstrip(' ,')
+		s = s.lstrip()
+		address['number'] = num
+		address['street'] = s.partition(',')[0].rstrip(' \n').lower()
+		addresses.append(address)
 	else:
-		s = secs[0] + secs[1]
-	streetAdresses.append(s)
+		print "problem with ", line
 
-addresses = []
-r = re.compile("\A\d*")
-for i in range(0, len(streetAdresses)):
-	entry = {}
-	entry['original'] = streetAdresses[i]
-	dig = r.findall(streetAdresses[i])
-	if dig:
-		entry['number'] = dig[0]
-		s = streetAdresses[i].lstrip(dig[0])
-		entry['street'] = s
-	addresses.append(entry)
+roadTrans = {}
+roadTrans['abbr'] = {'boul': 'boulevard', 'blvd': 'boulevard', 'ch': 'chemin', 'av': 'avenue', 'av': 'avenue', 'o': 'ouest', 'e': 'est', 'n': 'nord', 's': 'sud'}
+# key = french, value = english
+roadTrans['type'] = {'rue': 'street', 'avenue': 'avenue', 'boulevard': 'boulevard', 'chemin': 'road'}
+roadTrans['direction'] = {'ouest': 'west', 'nord': 'north', 'sud': 'south', 'est': 'east'}
 
-print addresses
+for i, ad in enumerate(addresses):
+	street = ad['street'].split()
+	# remove abbreviation
+	roadType = ''
+	roadDirection = ''
+	for j, word in enumerate(street):
+		if word in roadTrans['abbr']:
+			street[j] = roadTrans['abbr'][word]
+	for word in list(street):
+		if word in roadTrans['type']:
+			street.remove(word)
+			roadType = roadTrans['type'][word]
+		if word in roadTrans['direction']:
+			street.remove(word)
+			roadDirection = roadTrans['direction'][word]
+	if roadType:
+		street.append(roadType)
+	if roadDirection:
+		street.append(roadDirection)
+	# capitalize
+	for i in range(0, len(street)):
+		hyphens = street[i].split('-')
+		final = []
+		for w in hyphens:
+			final.append(w.capitalize())
+		street[i] = '-'.join(final)
+	ad['street'] = ' '.join(street).rstrip()
+	print ad['number'] + ' ' + ad['street']
 
 
-# pdb.set_trace()
-# 
-# p = r.findall(fileData[70])
-# s = unicode(p[0], 'utf-8')
-# print p
-# p = r.findall(fileData[71])
-# print p

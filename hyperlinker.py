@@ -42,6 +42,13 @@ businesses = []
 sites = ['facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter']
 # pdb.set_trace()
 
+# For translating addresses
+roadTrans = {}
+roadTrans['abbr'] = {'st': 'street', 'boul': 'boulevard', 'blvd': 'boulevard', 'ch': 'chemin', 'av': 'avenue', 'av': 'avenue', 'o': 'ouest', 'e': 'est', 'n': 'nord', 's': 'sud'}
+# key = french, value = english
+roadTrans['type'] = {'rue': 'street', 'avenue': 'avenue', 'boulevard': 'boulevard', 'chemin': 'road'}
+roadTrans['direction'] = {'ouest': 'west', 'nord': 'north', 'sud': 'south', 'est': 'east'}
+
 for line in fileData:
 	name = unicode(line.rstrip(' \n').strip(), 'utf-8').replace('&', 'and')
 	if name:
@@ -50,9 +57,6 @@ for line in fileData:
 		else:
 			businesses.append({'searchName': name})
 
-for b in businesses:
-	print b['searchName']
-
 def removeSkipWords(words):
 	skipWords = ['au', 'le', 'de', 'the']
 	for w in words:
@@ -60,6 +64,50 @@ def removeSkipWords(words):
 			if w.lower() == s:
 				words.remove(w)
 	return words
+
+def translateAddress(stringAddress):
+	s = stringAddress
+	address = {}
+	numRegex = re.compile("\A\d{1,5}[A-Z]{1}[ ,]|\A\d{1,5}", re.UNICODE)
+	# pdb.set_trace()
+	num = numRegex.findall(s)
+	# Get out number and street
+	if num:
+		num = num[0].rstrip(' ,')
+		s = s.replace(num, '').lstrip(' ,')
+		s = s.lstrip()
+		address['number'] = num
+		address['street'] = s.partition(',')[0].rstrip(' \n').lower()
+	else:
+		print "problem with ", s
+		return s
+	# Translate
+	street = address['street'].split()
+	roadType = ''
+	roadDirection = ''
+	for j, word in enumerate(street):
+		if word in roadTrans['abbr']:
+			street[j] = roadTrans['abbr'][word]
+	for word in list(street):
+		if word in roadTrans['type']:
+			street.remove(word)
+			roadType = roadTrans['type'][word]
+		if word in roadTrans['direction']:
+			street.remove(word)
+			roadDirection = roadTrans['direction'][word]
+	if roadType:
+		street.append(roadType)
+	if roadDirection:
+		street.append(roadDirection)
+	# capitalize
+	for i in range(0, len(street)):
+		hyphens = street[i].split('-')
+		final = []
+		for w in hyphens:
+			final.append(w.capitalize())
+		street[i] = '-'.join(final)
+	address['street'] = ' '.join(street).rstrip()
+	return address['number'] + ' ' + address['street']
 
 
 def findMatchScore(searchName, foundName) :
@@ -276,23 +324,20 @@ for b in businesses:
 						b['website'] = link.partition('&')[0].partition('=')[2]
 						break
 	print b['foundName']
-	# if findMatchScore(b['searchName'], b['foundName']) > 0.75:
-	if True:
-		print findMatchScore(b['searchName'], b['foundName'])
-		b['found'] = True
-		if b['website']:
-			print "website: " + b['website']
-		if b['phone']:
-			b['phone'] = b['phone'].replace('(', '').replace(')', '').replace(' ', '.').replace('-', '.')
-			print "phone: " + b['phone']
-		if b['address']:
-			print "address: " + b['address']
-		if b['facebook']:
-			print "facebook: " + b['facebook']
-		if b['twitter']:
-			print "twitter: " + b['twitter']
-	else:
-		print "probably not what you're looking for"
+	print findMatchScore(b['searchName'], b['foundName'])
+	b['found'] = True
+	if b['website']:
+		print "website: " + b['website']
+	if b['phone']:
+		b['phone'] = b['phone'].replace('(', '').replace(')', '').replace(' ', '.').replace('-', '.')
+		print "phone: " + b['phone']
+	if b['address']:
+		b['address'] = translateAddress(b['address'])
+		print "address: " + b['address']
+	if b['facebook']:
+		print "facebook: " + b['facebook']
+	if b['twitter']:
+		print "twitter: " + b['twitter']
 	print '\n'
 	## write to file
 	output.write("Search: " + b['searchName'] + '\n')

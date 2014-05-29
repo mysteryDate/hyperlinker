@@ -3,7 +3,7 @@
 import re
 roadTrans = {}
 
-roadTrans['abbr'] = {'boul': 'boulevard', 'ch': 'chemin', 'av': 'avenue', 'o': 'ouest', 'e': 'est', 'n': 'nord', 's': 'sud'}
+roadTrans['abbr'] = {'boul': 'boulevard', 'blvd': 'boulevard', 'ch': 'chemin', 'av': 'avenue', 'av': 'avenue', 'o': 'ouest', 'e': 'est', 'n': 'nord', 's': 'sud'}
 # key = french, value = english
 roadTrans['type'] = {'rue': 'street', 'avenue': 'avenue', 'boulevard': 'boulevard', 'chemin': 'road'}
 roadTrans['direction'] = {'ouest': 'west', 'nord': 'north', 'sud': 'south', 'est': 'east'}
