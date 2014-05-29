@@ -34,8 +34,8 @@ opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 inFilePath = "input.txt"
 outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
 
-textFile = open(inFilePath, "U")
 output = codecs.open(outFilePath, "w", 'utf-8')
+textFile = open(inFilePath, "U")
 fileData = textFile.readlines()
 textFile.close()
 businesses = []
