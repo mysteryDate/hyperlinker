@@ -31,10 +31,11 @@ opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
-inFilePath = "input.txt"
-outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.txt"
+inFilePath = "input_may23.txt"
+outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.rtf"
 
 output = codecs.open(outFilePath, "w", 'utf-8')
+pdb.set_trace()
 textFile = open(inFilePath, "U")
 fileData = textFile.readlines()
 textFile.close()
@@ -44,7 +45,7 @@ sites = ['facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter']
 
 # For translating addresses
 roadTrans = {}
-roadTrans['abbr'] = {'st': 'street', 'boul': 'boulevard', 'blvd': 'boulevard', 'ch': 'chemin', 'av': 'avenue', 'av': 'avenue', 'o': 'ouest', 'e': 'est', 'n': 'nord', 's': 'sud'}
+roadTrans['abbr'] = {'boul': 'boulevard', 'blvd': 'boulevard', 'ch': 'chemin', 'av': 'avenue', 'av': 'avenue', 'o': 'ouest', 'e': 'est', 'n': 'nord', 's': 'sud'}
 # key = french, value = english
 roadTrans['type'] = {'rue': 'street', 'avenue': 'avenue', 'boulevard': 'boulevard', 'chemin': 'road'}
 roadTrans['direction'] = {'ouest': 'west', 'nord': 'north', 'sud': 'south', 'est': 'east'}
@@ -285,6 +286,10 @@ def searchGoogle(business):
 					b['address'] = text.partition('(')[0]
 
 
+output.write("{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{" + 
+	"\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}}\\n{\\colortbl ;" + 
+	"\\red0\\green0\\blue255;}\n{\\*\\generator Msftedit 5.41.21.2509;}" + 
+	"\\viewkind4\\uc1\\pard\\sa200\\sl276\\slmult1\\lang9\\f0\\fs22")
 for b in businesses:
 	print "Search: " + b['searchName']
 	b['found'] = False
@@ -306,7 +311,12 @@ for b in businesses:
 	if not b['twitter']:
 		searchTwitter(b)
 	if not b['website']:
-		ignorewords = ['restomontreal', 'googleusercontent', 'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter', 'foursquare', 'zagat', 'blogspot', 'tripadvisor']
+		ignorewords = ['restomontreal', 'googleusercontent', 
+		'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 
+		'urbanspoon', 'twitter', 'foursquare', 'zagat', 'blogspot', 
+		'tripadvisor', 'pagesjaunes', 'montrealplus', 'canpages',
+		'blackbookmag', 'adbeux', 'about', 'citeeze', 'nightlife',
+		'restaurant']
 		div = b['gsoup'].find('div', id='search')
 		if div:
 			a = div.find_all('a')
@@ -340,18 +350,23 @@ for b in businesses:
 		print "twitter: " + b['twitter']
 	print '\n'
 	## write to file
-	output.write("Search: " + b['searchName'] + '\n')
+	output.write("Search: " + b['searchName'] + '\line\n')
 	if not b['found']:
-		output.write("Not found" + '\n')
+		output.write("Not found" + ' \line\n')
 	else:
-		output.write(b['foundName'] + '\n')
+		output.write(b['foundName'] + ' \line\n')
 		printAttributes = ['address', 'phone', 'website', 'facebook', 'twitter']
 		for att in printAttributes:
 			if b[att]:
-				output.write(b[att] + '\n')
-	output.write('\n')
+				if att == 'website':
+					output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att] + "}}{\\fldrslt{\ul\cf1" + b[att] + "}}}" + ' \line\n');
+					continue
+				if att == 'facebook' or att == 'twitter':
+					output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att] + "}}{\\fldrslt{\ul\cf1" + att.capitalize() + "}}}" + ' \line\n');
+				output.write(b[att] + ' \line\n')
+	output.write('\line\n')
 
-
+output.write('}')
 output.close()
 
 

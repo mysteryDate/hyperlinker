@@ -24,3 +24,5 @@ http://regexpal.com/
 for addresses:
 \d{1,5}[,]{0,1}[ ]{0,1}[a-zA-Z \.'-]*
 (maybe)
+
+sparkles confections did something funny with facebook
