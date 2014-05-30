@@ -33,7 +33,7 @@ opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
 inFilePath = "input.txt"
-outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.rtf"
+outFilePath = "outputs/" + inFilePath.rpartition('.')[0] + "_HYPERLINKED.rtf"
 
 # output = codecs.open(outFilePath, "w", 'utf-8')
 output = open(outFilePath, "w")
