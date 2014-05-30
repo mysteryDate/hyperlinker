@@ -240,6 +240,8 @@ def searchYelp(business):
 def getLink(siteName, links):
 	linkString = ''
 	for l in links:
+		if 'class' in l.attrs: #ignore these, they're for googleplus, etc.
+			continue
 		match = re.search(siteName, str(l['href']))
 		if match:
 			linkString = l['href']
