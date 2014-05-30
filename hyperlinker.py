@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import Levenshtein
 import unicodedata
 import codecs
+import rtfunicode
 import pdb
 
 #for pages with javascript
@@ -31,11 +32,12 @@ opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # print("Which File: ")
 # inFilePath = str(raw_input())
-inFilePath = "input_may23.txt"
+inFilePath = "input.txt"
 outFilePath = inFilePath.rpartition('.')[0] + "_HYPERLINKED.rtf"
 
-output = codecs.open(outFilePath, "w", 'utf-8')
-pdb.set_trace()
+# output = codecs.open(outFilePath, "w", 'utf-8')
+output = open(outFilePath, "w")
+# pdb.set_trace()
 textFile = open(inFilePath, "U")
 fileData = textFile.readlines()
 textFile.close()
@@ -289,7 +291,7 @@ def searchGoogle(business):
 output.write("{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{" + 
 	"\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}}\\n{\\colortbl ;" + 
 	"\\red0\\green0\\blue255;}\n{\\*\\generator Msftedit 5.41.21.2509;}" + 
-	"\\viewkind4\\uc1\\pard\\sa200\\sl276\\slmult1\\lang9\\f0\\fs22")
+	"\\viewkind4\\uc1\\pard\\sa200\\sl276\\slmult1\\lang9\\f0\\fs22\n\n")
 for b in businesses:
 	print "Search: " + b['searchName']
 	b['found'] = False
@@ -316,7 +318,7 @@ for b in businesses:
 		'urbanspoon', 'twitter', 'foursquare', 'zagat', 'blogspot', 
 		'tripadvisor', 'pagesjaunes', 'montrealplus', 'canpages',
 		'blackbookmag', 'adbeux', 'about', 'citeeze', 'nightlife',
-		'restaurant']
+		'restaurant', 'canplaces', 'yahoo']
 		div = b['gsoup'].find('div', id='search')
 		if div:
 			a = div.find_all('a')
@@ -350,21 +352,27 @@ for b in businesses:
 		print "twitter: " + b['twitter']
 	print '\n'
 	## write to file
-	output.write("Search: " + b['searchName'] + '\line\n')
+	output.write("Search: " + b['searchName'].encode('rtfunicode') + '\line\n')
 	if not b['found']:
 		output.write("Not found" + ' \line\n')
 	else:
-		output.write(b['foundName'] + ' \line\n')
+		output.write(b['foundName'].encode('rtfunicode') + ' \line\n')
 		printAttributes = ['address', 'phone', 'website', 'facebook', 'twitter']
 		for att in printAttributes:
 			if b[att]:
 				if att == 'website':
-					output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att] + "}}{\\fldrslt{\ul\cf1" + b[att] + "}}}" + ' \line\n');
+					name = urllib2.unquote(b[att])
+					name = unicode(urllib2.unquote(name), 'utf-8')
+					output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att].encode('rtfunicode') + "}}{\\fldrslt{\ul\cf1" + name.encode('rtfunicode') + "}}}" + ' \line\n');
 					continue
-				if att == 'facebook' or att == 'twitter':
-					output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att] + "}}{\\fldrslt{\ul\cf1" + att.capitalize() + "}}}" + ' \line\n');
-				output.write(b[att] + ' \line\n')
-	output.write('\line\n')
+				elif att == 'facebook' or att == 'twitter':
+					output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att].encode('rtfunicode') + "}}{\\fldrslt{\ul\cf1" + att.capitalize() + "}}}" + ' \line\n');
+					name = urllib2.unquote(b[att])
+					name = unicode(urllib2.unquote(name), 'utf-8')
+					output.write(name.encode('rtfunicode') + ' \line\n')
+				else:
+					output.write(b[att].encode('rtfunicode') + ' \line\n')
+	output.write('\line\n\n')
 
 output.write('}')
 output.close()
