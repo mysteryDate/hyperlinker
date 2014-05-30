@@ -11,43 +11,22 @@ import codecs
 import rtfunicode
 import pdb
 
-#for pages with javascript
-# from PyQt4.QtGui import *
-# from PyQt4.QtCore import *
-# from PyQt4.QtWebKit import *
-# import sys
-# class Render(QWebPage):
-#   def __init__(self, url):
-#     self.app = QApplication(sys.argv)
-#     QWebPage.__init__(self)
-#     self.loadFinished.connect(self._loadFinished)
-#     self.mainFrame().load(QUrl(url))
-#     self.app.exec_()
-
-#   def _loadFinished(self, result):
-#     self.frame = self.mainFrame()
-#     self.app.quit()
-
 opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-# print("Which File: ")
-# inFilePath = str(raw_input())
-inFilePath = "input.txt"
-outFilePath = "outputs/" + inFilePath.rpartition('.')[0] + "_HYPERLINKED.rtf"
+inFilePath = "inputs/input.txt"
+outFilePath = "outputs/" + inFilePath.lstrip('inputs').rpartition('.')[0] + "_HYPERLINKED.rtf"
 
-# output = codecs.open(outFilePath, "w", 'utf-8')
 output = open(outFilePath, "w")
-# pdb.set_trace()
 textFile = open(inFilePath, "U")
 fileData = textFile.readlines()
 textFile.close()
 businesses = []
 sites = ['facebook', 'yelp', 'yellowpages', 'urbanspoon', 'twitter']
-# pdb.set_trace()
 
 # For translating addresses
 roadTrans = {}
-roadTrans['abbr'] = {'boul': 'boulevard', 'blvd': 'boulevard', 'ch': 'chemin', 'av': 'avenue', 'av': 'avenue', 'o': 'ouest', 'e': 'est', 'n': 'nord', 's': 'sud'}
+roadTrans['abbr'] = {'boul': 'boulevard', 'blvd': 'boulevard', 'bd': 'boulevard', 'ch': 'chemin', 
+					'av': 'avenue', 'o': 'ouest', 'e': 'est', 'n': 'nord', 's': 'sud'}
 # key = french, value = english
 roadTrans['type'] = {'rue': 'street', 'avenue': 'avenue', 'boulevard': 'boulevard', 'chemin': 'road'}
 roadTrans['direction'] = {'ouest': 'west', 'nord': 'north', 'sud': 'south', 'est': 'east'}
@@ -72,7 +51,6 @@ def translateAddress(stringAddress):
 	s = stringAddress
 	address = {}
 	numRegex = re.compile("\A\d{1,5}[A-Z]{1}[ ,]|\A\d{1,5}", re.UNICODE)
-	# pdb.set_trace()
 	num = numRegex.findall(s)
 	# Get out number and street
 	if num:
@@ -83,7 +61,7 @@ def translateAddress(stringAddress):
 		address['street'] = s.partition(',')[0].rstrip(' \n').lower()
 	else:
 		print "problem with ", s
-		return s
+		return ''
 	# Translate
 	street = address['street'].split()
 	roadType = ''
@@ -112,7 +90,6 @@ def translateAddress(stringAddress):
 	address['street'] = ' '.join(street).rstrip()
 	return address['number'] + ' ' + address['street']
 
-
 def findMatchScore(searchName, foundName) :
 	if(type(searchName) is unicode):
 		searchName = unicodedata.normalize('NFKD', searchName).encode('ascii','ignore')
@@ -130,7 +107,7 @@ def findMatchScore(searchName, foundName) :
 			if r > maxRatio:
 				maxRatio = r
 		bigR += maxRatio
-	bigR2 = 0 # if the input has MORE words that the solution (rare)
+	bigR2 = 0 # if the input has MORE words than the solution (rare)
 	for fWord in foundWords:
 		maxRatio = 0
 		for iWord in inputWords:
@@ -141,25 +118,6 @@ def findMatchScore(searchName, foundName) :
 	bigR /= len(inputWords)
 	bigR2 /= len(foundWords)
 	return max(bigR, bigR2)
-
-def searchFacebook(business):
-	url = business['facebook']
-	r = Render(url) # because javascript
-	html = unicode(r.frame.toHtml())
-	soup = BeautifulSoup(html)
-	r.app.quit()
-	if not business['address']:
-		address = soup.find('span', itemprop='address')
-		if address:
-			business['address'] = address.find('a').getText()
-	if not business['phone']:
-		phone = soup.find('span', itemprop='telephone')
-		if phone:
-			business['phone'] = phone.getText()
-	if not business['website']:
-		website = soup.find('span', itemprop='url')
-		if website:
-			business['website'] = website.find('a').getText()
 
 def searchYellowpages(business):
 	url = business['yellowpages']
@@ -173,7 +131,7 @@ def searchYellowpages(business):
 		if address:
 			span = address.find('span', itemprop="streetAddress")
 			if span:
-				business['address'] = span.getText().strip(' \n').rstrip(' \n')
+				business['address'] = translateAddress(span.getText().strip(' \n').rstrip(' \n'))
 	if not business['phone']:
 		phone = soup.find('li', class_="phone")
 		if phone:
@@ -186,6 +144,7 @@ def searchYellowpages(business):
 
 # search yelp
 def searchYelp(business):
+	pdb.set_trace()
 	if not business['yelp']:
 		name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
 		url = "https://www.yelp.com/search?find_desc=" + name.replace(' ', '+').lower() + "&find_loc=Montreal"
@@ -233,9 +192,9 @@ def searchYelp(business):
 			address = addy[-1]
 			span = address.find(itemprop="streetAddress")
 			if span:
-				business['address'] = span.getText().strip(' \n').rstrip(' \n')
+				business['address'] = translateAddress(span.getText().strip(' \n').rstrip(' \n'))
 			else:
-				business['address'] = address.getText().strip(' \n').rstrip(' \n')
+				business['address'] = translateAddress(address.getText().strip(' \n').rstrip(' \n'))
 
 def getLink(siteName, links):
 	linkString = ''
@@ -264,8 +223,7 @@ def searchTwitter(business):
 def searchGoogle(business):
 	name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
 	url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+montreal"
-	b['gsoup'] = BeautifulSoup(opener.open(url).read())
-	soup = b['gsoup']
+	soup = BeautifulSoup(opener.open(url).read())
 	spell = soup.find('a', class_="spell")
 	if spell:
 		actualName = spell.getText()
@@ -284,19 +242,20 @@ def searchGoogle(business):
 		if td:
 			text = td.getText()	
 			if text: #these nested condtionals are getting annoying
-				if not b['phone']:
-					b['phone'] = '(' + text.partition('(')[2]
-				if not b['address']:
-					b['address'] = text.partition('(')[0]
+				reg = re.compile("[(]{0,1}\d{3}[) \.]{0,2}\d{3}[ -\.]{0,1}\d{4}")
+				phone = reg.findall(text)
+				if phone:
+					b['phone'] = phone[0]
+				b['address'] = translateAddress(text.partition('(')[0])
+	return soup
 
 
 output.write("{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{" + 
-	"\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}}\\n{\\colortbl ;" + 
+	"\\fonttbl{\\f0\\fnil\\fcharset0 Helvetica;}}\\n{\\colortbl ;" + 
 	"\\red0\\green0\\blue255;}\n{\\*\\generator Msftedit 5.41.21.2509;}" + 
 	"\\viewkind4\\uc1\\pard\\sa200\\sl276\\slmult1\\lang9\\f0\\fs22\n\n")
 for b in businesses:
 	print "Search: " + b['searchName']
-	b['found'] = False
 	b['foundName'] = b['searchName']
 	b['address'] = ''
 	b['phone'] = ''
@@ -304,14 +263,12 @@ for b in businesses:
 	for s in sites:
 		b[s] = ''
 	# google is definitely on to me, I should be careful
-	searchGoogle(b)
+	gsoup = searchGoogle(b)
 	if b['foundName'] != b['searchName']:
 		print "It's probably called: " + b['foundName']
 	searchYelp(b)
 	if not (b['website'] and b['address'] and b['phone']) and (not not b['yellowpages']):
 		searchYellowpages(b)
-	# if not (b['website'] and b['address'] and b['phone']) and (not not b['facebook']):
-		# searchFacebook(b)
 	if not b['twitter']:
 		searchTwitter(b)
 	if not b['website']:
@@ -321,7 +278,7 @@ for b in businesses:
 		'tripadvisor', 'pagesjaunes', 'montrealplus', 'canpages',
 		'blackbookmag', 'adbeux', 'about', 'citeeze', 'nightlife',
 		'restaurant', 'canplaces', 'yahoo']
-		div = b['gsoup'].find('div', id='search')
+		div = gsoup.find('div', id='search')
 		if div:
 			a = div.find_all('a')
 			for l in a:
@@ -339,14 +296,12 @@ for b in businesses:
 						break
 	print b['foundName']
 	print findMatchScore(b['searchName'], b['foundName'])
-	b['found'] = True
 	if b['website']:
 		print "website: " + b['website']
 	if b['phone']:
 		b['phone'] = b['phone'].replace('(', '').replace(')', '').replace(' ', '.').replace('-', '.')
 		print "phone: " + b['phone']
 	if b['address']:
-		b['address'] = translateAddress(b['address'])
 		print "address: " + b['address']
 	if b['facebook']:
 		print "facebook: " + b['facebook']
@@ -355,29 +310,23 @@ for b in businesses:
 	print '\n'
 	## write to file
 	output.write("Search: " + b['searchName'].encode('rtfunicode') + '\line\n')
-	if not b['found']:
-		output.write("Not found" + ' \line\n')
-	else:
-		output.write(b['foundName'].encode('rtfunicode') + ' \line\n')
-		printAttributes = ['address', 'phone', 'website', 'facebook', 'twitter']
-		for att in printAttributes:
-			if b[att]:
-				if att == 'website':
-					name = urllib2.unquote(b[att])
-					name = unicode(urllib2.unquote(name), 'utf-8')
-					output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att].encode('rtfunicode') + "}}{\\fldrslt{\ul\cf1" + name.encode('rtfunicode') + "}}}" + ' \line\n');
-					continue
-				elif att == 'facebook' or att == 'twitter':
-					output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att].encode('rtfunicode') + "}}{\\fldrslt{\ul\cf1" + att.capitalize() + "}}}" + ' \line\n');
-					name = urllib2.unquote(b[att])
-					name = unicode(urllib2.unquote(name), 'utf-8')
-					output.write(name.encode('rtfunicode') + ' \line\n')
-				else:
-					output.write(b[att].encode('rtfunicode') + ' \line\n')
+	output.write(b['foundName'].encode('rtfunicode') + ' \line\n')
+	printAttributes = ['address', 'phone', 'website', 'facebook', 'twitter']
+	for att in printAttributes:
+		if b[att]:
+			if att == 'website':
+				name = urllib2.unquote(b[att])
+				name = unicode(urllib2.unquote(name), 'utf-8')
+				output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att].encode('rtfunicode') + "}}{\\fldrslt{\ul\cf1" + name.encode('rtfunicode') + "}}}" + ' \line\n');
+				continue
+			elif att == 'facebook' or att == 'twitter':
+				output.write("{\\field{\\*\\fldinst{HYPERLINK " + b[att].encode('rtfunicode') + "}}{\\fldrslt{\ul\cf1" + att.capitalize() + "}}}" + ' \line\n');
+				name = urllib2.unquote(b[att])
+				name = unicode(urllib2.unquote(name), 'utf-8')
+				output.write(name.encode('rtfunicode') + ' \line\n')
+			else:
+				output.write(b[att].encode('rtfunicode') + ' \line\n')
 	output.write('\line\n\n')
 
 output.write('}')
 output.close()
-
-
-
