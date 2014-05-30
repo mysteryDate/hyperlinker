@@ -13,8 +13,9 @@ import pdb
 
 opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-inFilePath = "inputs/input.txt"
+inFilePath = "inputs/may_17_input.txt"
 outFilePath = "outputs/" + inFilePath.lstrip('inputs').rpartition('.')[0] + "_HYPERLINKED.rtf"
+CITY = "montreal"
 
 output = open(outFilePath, "w")
 textFile = open(inFilePath, "U")
@@ -144,10 +145,9 @@ def searchYellowpages(business):
 
 # search yelp
 def searchYelp(business):
-	pdb.set_trace()
 	if not business['yelp']:
 		name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
-		url = "https://www.yelp.com/search?find_desc=" + name.replace(' ', '+').lower() + "&find_loc=Montreal"
+		url = "https://www.yelp.com/search?find_desc=" + name.replace(' ', '+').lower() + "&find_loc=" + CITY
 		soup = BeautifulSoup(opener.open(url).read())
 		a = soup.find('a', class_="biz-name")
 		if a:
@@ -212,7 +212,7 @@ def getLink(siteName, links):
 #only if twitter isn't found
 def searchTwitter(business):
 	name = unicodedata.normalize('NFKD', business['foundName']).encode('ascii','ignore')
-	url = "https://twitter.com/search?q="+name.replace(' ', '%20')+"%20montreal&mode=users"
+	url = "https://twitter.com/search?q="+name.replace(' ', '%20')+"%20"+CITY+"&mode=users"
 	soup = BeautifulSoup(opener.open(url).read())
 	a = soup.find('a', 'js-user-profile-link')
 	if a:
@@ -222,7 +222,7 @@ def searchTwitter(business):
 
 def searchGoogle(business):
 	name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
-	url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+montreal"
+	url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+" + CITY
 	soup = BeautifulSoup(opener.open(url).read())
 	spell = soup.find('a', class_="spell")
 	if spell:
@@ -272,12 +272,14 @@ for b in businesses:
 	if not b['twitter']:
 		searchTwitter(b)
 	if not b['website']:
+		# Sites I don't want showing up as the business website
 		ignorewords = ['restomontreal', 'googleusercontent', 
 		'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 
 		'urbanspoon', 'twitter', 'foursquare', 'zagat', 'blogspot', 
 		'tripadvisor', 'pagesjaunes', 'montrealplus', 'canpages',
 		'blackbookmag', 'adbeux', 'about', 'citeeze', 'nightlife',
-		'restaurant', 'canplaces', 'yahoo']
+		'restaurant', 'canplaces', 'yahoo', 'profilecanada', 'mtlblog'
+		'nearyou', 'foodpages']
 		div = gsoup.find('div', id='search')
 		if div:
 			a = div.find_all('a')
