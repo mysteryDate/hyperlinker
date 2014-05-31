@@ -282,7 +282,12 @@ for b in businesses:
 		'nearyou', 'foodpages']
 		div = gsoup.find('div', id='search')
 		if div:
-			a = div.find_all('a')
+			h3 = div.find_all('h3', class_='r')
+			a = []
+			for header in h3:
+				link = header.find('a')
+				if link:
+					a.append(link)
 			for l in a:
 				link = l['href']
 				if link:
@@ -294,11 +299,23 @@ for b in businesses:
 						if w in ignorewords:
 							ignore = True
 					if not ignore:
-						b['website'] = link.partition('&')[0].partition('=')[2]
-						break
+						ws = link.partition('&')[0].partition('=')[2]
+						if ws[:4] == "http":
+							ws = ws.lstrip("https://")
+						ws = ws.rstrip('/')
+						words = ws.split('/')
+						if len(words) == 1: #ignore ones that are super lengthy and often wrong
+							b['website'] = ws
+							break
 	print b['foundName']
-	print findMatchScore(b['searchName'], b['foundName'])
+	matchScore = findMatchScore(b['searchName'], b['foundName'])
+	print matchScore
 	if b['website']:
+		if b['website'][:4] == "http":
+			b['website'] = b['website'].lstrip("https://")
+		if b['website'][:3] == "www":
+			b['website'] = b['website'].partition("www.")[2]
+		b['website'] = b['website'].rstrip('/')
 		print "website: " + b['website']
 	if b['phone']:
 		b['phone'] = b['phone'].replace('(', '').replace(')', '').replace(' ', '.').replace('-', '.')
@@ -311,7 +328,8 @@ for b in businesses:
 		print "twitter: " + b['twitter']
 	print '\n'
 	## write to file
-	output.write("Search: " + b['searchName'].encode('rtfunicode') + '\line\n')
+	if matchScore < 0.8:
+		output.write("Search: " + b['searchName'].encode('rtfunicode') + '\line\n')
 	output.write(b['foundName'].encode('rtfunicode') + ' \line\n')
 	printAttributes = ['address', 'phone', 'website', 'facebook', 'twitter']
 	for att in printAttributes:
