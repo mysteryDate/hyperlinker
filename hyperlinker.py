@@ -301,9 +301,9 @@ for b in businesses:
 					if not ignore:
 						ws = link.partition('&')[0].partition('=')[2]
 						if ws[:4] == "http":
-							ws = ws.lstrip("https://")
-						ws = ws.rstrip('/')
-						words = ws.split('/')
+							wsfilt = ws.lstrip("https://")
+						wsfilt = ws.rstrip('/')
+						words = wsfilt.split('/')
 						if len(words) == 1: #ignore ones that are super lengthy and often wrong
 							b['website'] = ws
 							break
@@ -311,11 +311,11 @@ for b in businesses:
 	matchScore = findMatchScore(b['searchName'], b['foundName'])
 	print matchScore
 	if b['website']:
-		if b['website'][:4] == "http":
-			b['website'] = b['website'].lstrip("https://")
-		if b['website'][:3] == "www":
-			b['website'] = b['website'].partition("www.")[2]
-		b['website'] = b['website'].rstrip('/')
+		# if b['website'][:4] == "http":
+		# 	b['website'] = b['website'].lstrip("https://")
+		# if b['website'][:3] == "www":
+		# 	b['website'] = b['website'].partition("www.")[2]
+		# b['website'] = b['website'].rstrip('/')
 		print "website: " + b['website']
 	if b['phone']:
 		b['phone'] = b['phone'].replace('(', '').replace(')', '').replace(' ', '.').replace('-', '.')
