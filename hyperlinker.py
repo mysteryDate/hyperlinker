@@ -2,19 +2,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import urllib2
-import re
-from bs4 import BeautifulSoup
-import Levenshtein
-import unicodedata
-import codecs
-import rtfunicode
-import pdb
+import urllib2 	# For parsing urls
+import re 		# Stand back! I know regular expressions
+from bs4 import BeautifulSoup # An html travelling tool
+import Levenshtein 	# For fuzzy matching strings, for the lulz
+import unicodedata 	# Because accented characters are a pain in the ass
+import codecs 		# Ditto
+import rtfunicode 	# Double ditto
+import pdb 			# A debugger
 
 opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+# Input file is from here
 inFilePath = "inputs/may31.txt"
+# Outpuf file goes here
 outFilePath = "outputs/" + inFilePath.lstrip('inputs').rpartition('.')[0] + "_HYPERLINKED.rtf"
+# I have yet to try this with anything but montreal
 CITY = "montreal"
 
 output = open(outFilePath, "w")
@@ -32,6 +35,7 @@ roadTrans['abbr'] = {'boul': 'boulevard', 'blvd': 'boulevard', 'bd': 'boulevard'
 roadTrans['type'] = {'rue': 'street', 'avenue': 'avenue', 'boulevard': 'boulevard', 'chemin': 'road'}
 roadTrans['direction'] = {'ouest': 'west', 'nord': 'north', 'sud': 'south', 'est': 'east'}
 
+# Read in the input data
 for line in fileData:
 	name = unicode(line.rstrip(' \n').strip(), 'utf-8').replace('&', 'and')
 	if name:
@@ -40,6 +44,7 @@ for line in fileData:
 		else:
 			businesses.append({'searchName': name})
 
+# When comparing two strings for smiliarity, remove these words to prevent false negatives
 def removeSkipWords(words):
 	skipWords = ['au', 'le', 'de', 'the']
 	for w in words:
@@ -48,6 +53,7 @@ def removeSkipWords(words):
 				words.remove(w)
 	return words
 
+# Properly format and change french addresses to english
 def translateAddress(stringAddress):
 	s = stringAddress
 	address = {}
@@ -91,6 +97,7 @@ def translateAddress(stringAddress):
 	address['street'] = ' '.join(street).rstrip()
 	return address['number'] + ' ' + address['street']
 
+# See if the found business name matches the searched name
 def findMatchScore(searchName, foundName) :
 	if(type(searchName) is unicode):
 		searchName = unicodedata.normalize('NFKD', searchName).encode('ascii','ignore')
@@ -120,6 +127,7 @@ def findMatchScore(searchName, foundName) :
 	bigR2 /= len(foundWords)
 	return max(bigR, bigR2)
 
+# If google finds a yellowpages link for the business, attempt to get a phone/address from the page
 def searchYellowpages(business):
 	url = business['yellowpages']
 	soup = BeautifulSoup(opener.open(url).read())
@@ -196,6 +204,7 @@ def searchYelp(business):
 			else:
 				business['address'] = translateAddress(address.getText().strip(' \n').rstrip(' \n'))
 
+# Returns links matching the site name from a list of links
 def getLink(siteName, links):
 	linkString = ''
 	for l in links:
@@ -209,7 +218,7 @@ def getLink(siteName, links):
 			break
 	return linkString
 
-#only if twitter isn't found
+#only if twitter isn't found, because twitter's search is teh suxxor
 def searchTwitter(business):
 	name = unicodedata.normalize('NFKD', business['foundName']).encode('ascii','ignore')
 	url = "https://twitter.com/search?q="+name.replace(' ', '%20')+"%20"+CITY+"&mode=users"
@@ -220,6 +229,7 @@ def searchTwitter(business):
 		if link:
 			business['twitter'] = "twitter.com" + link
 
+# Get site links, attempt phone number and address
 def searchGoogle(business):
 	name = unicodedata.normalize('NFKD', business['searchName']).encode('ascii','ignore')
 	url = "https://www.google.ca/search?q=" + name.replace(' ', '+').lower() + "+" + CITY
@@ -249,11 +259,13 @@ def searchGoogle(business):
 				b['address'] = translateAddress(text.partition('(')[0])
 	return soup
 
-
+# Gobbledeegook for the rtf header
 output.write("{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{" + 
 	"\\fonttbl{\\f0\\fnil\\fcharset0 Helvetica;}}\\n{\\colortbl ;" + 
 	"\\red0\\green0\\blue255;}\n{\\*\\generator Msftedit 5.41.21.2509;}" + 
 	"\\viewkind4\\uc1\\pard\\sa200\\sl276\\slmult1\\lang9\\f0\\fs22\n\n")
+
+# For every business on the input file, search and output results
 for b in businesses:
 	print "Search: " + b['searchName']
 	b['foundName'] = b['searchName']
@@ -267,10 +279,13 @@ for b in businesses:
 	if b['foundName'] != b['searchName']:
 		print "It's probably called: " + b['foundName']
 	searchYelp(b)
+	# If we still haven't found some info, but have a yellowpages link, try it
 	if not (b['website'] and b['address'] and b['phone']) and (not not b['yellowpages']):
 		searchYellowpages(b)
+	# Because twitters are hard to find
 	if not b['twitter']:
 		searchTwitter(b)
+	# If no website is listed, use the results from the google search to try and find one
 	if not b['website']:
 		# Sites I don't want showing up as the business website
 		ignorewords = ['restomontreal', 'googleusercontent', 
@@ -307,17 +322,14 @@ for b in businesses:
 						if len(words) == 1: #ignore ones that are super lengthy and often wrong
 							b['website'] = ws
 							break
+	# This is just for reporting to the console
 	print b['foundName']
 	matchScore = findMatchScore(b['searchName'], b['foundName'])
 	print matchScore
 	if b['website']:
-		# if b['website'][:4] == "http":
-		# 	b['website'] = b['website'].lstrip("https://")
-		# if b['website'][:3] == "www":
-		# 	b['website'] = b['website'].partition("www.")[2]
-		# b['website'] = b['website'].rstrip('/')
 		print "website: " + b['website']
 	if b['phone']:
+		# Reformat the phone number to ###.###.####
 		b['phone'] = b['phone'].replace('(', '').replace(')', '').replace(' ', '.').replace('-', '.')
 		print "phone: " + b['phone']
 	if b['address']:
@@ -328,7 +340,8 @@ for b in businesses:
 		print "twitter: " + b['twitter']
 	print '\n'
 	## write to file
-	if matchScore < 0.8:
+	# If the located business name is significantly different, report it
+	if matchScore < 0.8: 
 		output.write("Search: " + b['searchName'].encode('rtfunicode') + '\line\n')
 	output.write(b['foundName'].encode('rtfunicode') + ' \line\n')
 	printAttributes = ['address', 'phone', 'website', 'facebook', 'twitter']
@@ -348,5 +361,6 @@ for b in businesses:
 				output.write(b[att].encode('rtfunicode') + ' \line\n')
 	output.write('\line\n\n')
 
+# Close out rtf file so that it is readable
 output.write('}')
 output.close()
