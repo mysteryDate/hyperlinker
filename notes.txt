@@ -26,3 +26,18 @@ for addresses:
 (maybe)
 
 sparkles confections did something funny with facebook
+
+plusses on twitters
+
+$('body').html().match(/[\( ]?\d{3}[\)]?[ \.]?\d{3}[-\. ]\d{4}/g)
+matches any phone number on a page
+
+$('body').html().match(/\d{1,5}[ ][\w -\.,]*[mM]ontr[eé]al[\w -\.,]*/g)
+matches address
+$('body').html().match(/\d{1,5}[ ][A-Za-z -\.,]*[mM]ontr[eé]al[\w -\.,]{2,15}/g)
+maybe better
+
+javascript:if(!window.jQuery||confirm('Overwrite\x20current\x20version?\x20v'+jQuery.fn.jquery))(function(d,s){s=d.createElement('script');s.src='https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.js';(d.head||d.documentElement).appendChild(s)})(document);
+get jquery on a page
+
+super would be to get MANY phones, addresses, compare

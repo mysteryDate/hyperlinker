@@ -13,7 +13,7 @@ import pdb
 
 opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-inFilePath = "inputs/may_17_input.txt"
+inFilePath = "inputs/may31.txt"
 outFilePath = "outputs/" + inFilePath.lstrip('inputs').rpartition('.')[0] + "_HYPERLINKED.rtf"
 CITY = "montreal"
 
@@ -302,7 +302,7 @@ for b in businesses:
 						ws = link.partition('&')[0].partition('=')[2]
 						if ws[:4] == "http":
 							wsfilt = ws.lstrip("https://")
-						wsfilt = ws.rstrip('/')
+						wsfilt = wsfilt.rstrip('/')
 						words = wsfilt.split('/')
 						if len(words) == 1: #ignore ones that are super lengthy and often wrong
 							b['website'] = ws
