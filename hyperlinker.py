@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -287,7 +286,7 @@ for b in businesses:
 		searchTwitter(b)
 	# If no website is listed, use the results from the google search to try and find one
 	if not b['website']:
-		# Sites I don't want showing up as the business website
+		# Sites I don't want showing up as the business website, kinda hacky
 		ignorewords = ['restomontreal', 'googleusercontent', 
 		'webcache', 'google', 'facebook', 'yelp', 'yellowpages', 
 		'urbanspoon', 'twitter', 'foursquare', 'zagat', 'blogspot', 
