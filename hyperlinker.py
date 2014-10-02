@@ -13,8 +13,8 @@ import pdb 			# A debugger
 opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # Input file is from here
-inFilePath = "inputs/may31.txt"
-# Outpuf file goes here
+inFilePath = "inputs/september26.txt"
+# outpuf file goes here
 outFilePath = "outputs/" + inFilePath.lstrip('inputs').rpartition('.')[0] + "_HYPERLINKED.rtf"
 # I have yet to try this with anything but montreal
 CITY = "montreal"
@@ -44,7 +44,7 @@ for line in fileData:
 			businesses.append({'searchName': name})
 
 # When comparing two strings for smiliarity, remove these words to prevent false negatives
-def removeSkipWords(words):
+def removeSkipWords(words): 
 	skipWords = ['au', 'le', 'de', 'the']
 	for w in words:
 		for s in skipWords:
