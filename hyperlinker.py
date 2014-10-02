@@ -13,7 +13,7 @@ import pdb 			# A debugger
 opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # Input file is from here
-inFilePath = "inputs/september26.txt"
+inFilePath = "inputs/october2.txt"
 # outpuf file goes here
 outFilePath = "outputs/" + inFilePath.lstrip('inputs').rpartition('.')[0] + "_HYPERLINKED.rtf"
 # I have yet to try this with anything but montreal
